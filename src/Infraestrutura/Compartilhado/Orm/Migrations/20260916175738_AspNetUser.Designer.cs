@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace GeradorCertificados.Infraestrutura.Compartilhado.Orm.Migrations
 {
     [DbContext(typeof(GeradorCertificadosDbContext))]
-    [Migration("20260902171220_Seed_ClienteRole")]
-    partial class Seed_ClienteRole
+    [Migration("20260916175738_AspNetUser")]
+    partial class AspNetUser
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,29 +24,6 @@ namespace GeradorCertificados.Infraestrutura.Compartilhado.Orm.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("GeradorCertificados.Dominio.Modulos.Clientes.Cliente", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Cpf")
-                        .IsRequired()
-                        .HasMaxLength(11)
-                        .HasColumnType("character varying(11)");
-
-                    b.Property<string>("Nome")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Cpf")
-                        .IsUnique();
-
-                    b.ToTable("TBClientes", (string)null);
-                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
                 {
@@ -73,15 +50,6 @@ namespace GeradorCertificados.Infraestrutura.Compartilhado.Orm.Migrations
                         .HasDatabaseName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("01a058f4-a048-79a3-b1a6-0f01d629a126"),
-                            ConcurrencyStamp = "01a058f7-9492-73bc-8e4b-934c53594ed6",
-                            Name = "Cliente",
-                            NormalizedName = "CLIENTE"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -250,15 +218,6 @@ namespace GeradorCertificados.Infraestrutura.Compartilhado.Orm.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("GeradorCertificados.Dominio.Modulos.Clientes.Cliente", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser<System.Guid>", null)
-                        .WithOne()
-                        .HasForeignKey("GeradorCertificados.Dominio.Modulos.Clientes.Cliente", "Id")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>

@@ -3,7 +3,6 @@ using System;
 using GeradorCertificados.Infraestrutura.Compartilhado.Orm;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,11 +11,9 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace GeradorCertificados.Infraestrutura.Compartilhado.Orm.Migrations
 {
     [DbContext(typeof(GeradorCertificadosDbContext))]
-    [Migration("20260903173926_Add_TBEstabelecimentos")]
-    partial class Add_TBEstabelecimentos
+    partial class GeradorCertificadosDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24,73 +21,6 @@ namespace GeradorCertificados.Infraestrutura.Compartilhado.Orm.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("GeradorCertificados.Dominio.Modulos.Clientes.Cliente", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Cpf")
-                        .IsRequired()
-                        .HasMaxLength(11)
-                        .HasColumnType("character varying(11)");
-
-                    b.Property<string>("Nome")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Cpf")
-                        .IsUnique();
-
-                    b.ToTable("TBClientes", (string)null);
-                });
-
-            modelBuilder.Entity("GeradorCertificados.Dominio.Modulos.Estabelecimentos.Estabelecimento", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("AreaAtendimento")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("character varying(150)");
-
-                    b.Property<bool>("Ativo")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Documento")
-                        .IsRequired()
-                        .HasMaxLength(14)
-                        .HasColumnType("character varying(14)");
-
-                    b.Property<string>("Endereco")
-                        .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("character varying(250)");
-
-                    b.Property<TimeOnly>("HorarioAbertura")
-                        .HasColumnType("time without time zone");
-
-                    b.Property<TimeOnly>("HorarioFechamento")
-                        .HasColumnType("time without time zone");
-
-                    b.Property<string>("NomeComercial")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("Telefone")
-                        .IsRequired()
-                        .HasMaxLength(11)
-                        .HasColumnType("character varying(11)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("TBEstabelecimentos", (string)null);
-                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
                 {
@@ -117,22 +47,6 @@ namespace GeradorCertificados.Infraestrutura.Compartilhado.Orm.Migrations
                         .HasDatabaseName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("01a058f4-a048-79a3-b1a6-0f01d629a126"),
-                            ConcurrencyStamp = "01a058f7-9492-73bc-8e4b-934c53594ed6",
-                            Name = "Cliente",
-                            NormalizedName = "CLIENTE"
-                        },
-                        new
-                        {
-                            Id = new Guid("01a06851-5e71-7ae2-822d-21e2fadcffa4"),
-                            ConcurrencyStamp = "01a06852-c767-7d97-84e4-6b5f0775f3e5",
-                            Name = "Estabelecimento",
-                            NormalizedName = "ESTABELECIMENTO"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -301,24 +215,6 @@ namespace GeradorCertificados.Infraestrutura.Compartilhado.Orm.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("GeradorCertificados.Dominio.Modulos.Clientes.Cliente", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser<System.Guid>", null)
-                        .WithOne()
-                        .HasForeignKey("GeradorCertificados.Dominio.Modulos.Clientes.Cliente", "Id")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("GeradorCertificados.Dominio.Modulos.Estabelecimentos.Estabelecimento", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser<System.Guid>", null)
-                        .WithOne()
-                        .HasForeignKey("GeradorCertificados.Dominio.Modulos.Estabelecimentos.Estabelecimento", "Id")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
