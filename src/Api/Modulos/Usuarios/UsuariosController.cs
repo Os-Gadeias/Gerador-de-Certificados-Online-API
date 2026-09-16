@@ -17,7 +17,6 @@ public class UsuariosController(
     [AllowAnonymous]
     [HttpGet("{usuarioId:guid}")]
     [ProducesResponseType<ObterUsuarioResponse>(StatusCodes.Status200OK)]
-    [ProducesResponseType<ObterUsuarioResponse>(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<ObterUsuarioResponse>> ObterPorId(Guid usuarioId)
     {
         var resultado = await mediator.Send(
@@ -36,8 +35,6 @@ public class UsuariosController(
     [AllowAnonymous]
     [HttpPost("cadastro")]
     [ProducesResponseType<CadastrarUsuarioResponse>(StatusCodes.Status201Created)]
-    [ProducesResponseType<CadastrarUsuarioResponse>(StatusCodes.Status409Conflict)]
-    [ProducesResponseType<CadastrarUsuarioResponse>(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<CadastrarUsuarioResponse>> Cadastrar(
         CadastrarUsuarioRequest req,
         CancellationToken cancellationToken)
@@ -58,6 +55,7 @@ public class UsuariosController(
     }
 
     [HttpPost("login")]
+    [ProducesResponseType<CadastrarUsuarioResponse>(StatusCodes.Status200OK)]
     [AllowAnonymous]
     public async Task<ActionResult<AutenticarUsuarioDto>> Login(LogarUsuarioRequest req, CancellationToken cancellationToken)
     {
