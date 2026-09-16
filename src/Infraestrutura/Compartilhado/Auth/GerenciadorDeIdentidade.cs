@@ -50,7 +50,15 @@ public sealed class GerenciadorDeIdentidade(
 
         return new UsuarioDto(usuario.Id, usuario.Email!);
     }
+    public async Task<UsuarioDto?> SelecionarIdAsync(Guid id)
+    {
+        var resultado = await userManager.FindByIdAsync(id.ToString());
 
+        if (resultado is null)
+            return null;
+
+        return new UsuarioDto(resultado.Id, resultado.Email!);
+    }
     private static Exception CriarErro(IdentityResult resultado)
     {
         if (resultado.Errors.Any(

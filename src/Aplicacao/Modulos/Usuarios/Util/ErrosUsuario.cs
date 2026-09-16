@@ -22,7 +22,7 @@ public static class ErrosUsuario
 
     public static Error NaoEncontrado(Guid idCliente)
     {
-        return new Error("O cliente com este ID não foi encontrado.")
+        return new Error("O usuário com este ID não foi encontrado.")
             .WithMetadata(nameof(TipoErro), TipoErro.NaoEncontrado)
             .WithMetadata("IdCliente", idCliente);
     }
@@ -52,5 +52,5 @@ public static class ErrosUsuario
             .WithMetadata(nameof(TipoErro), TipoErro.Validacao)
             .WithMetadata("Campo", campo);
     }
-    
+
 }
