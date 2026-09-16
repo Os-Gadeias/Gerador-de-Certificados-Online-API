@@ -1,0 +1,39 @@
+using System.Security.Claims;
+using GeradorCertificados.Dominio.Compartilhado.Auth;
+
+namespace GeradorCertificados.WebApi.Compartilhado.Auth;
+
+public sealed class UserProvider(IHttpContextAccessor httpContextAccessor) : IProvedorDeUsuario
+{
+    public Guid? Id
+    {
+        get
+        {
+            ClaimsPrincipal? user = httpContextAccessor.HttpContext?.User;
+
+            if (user?.Identity is null || !user.Identity.IsAuthenticated)
+                return null;
+
+            string? claim = user.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (claim is null || !Guid.TryParse(claim, out Guid id))
+                return null;
+
+            return id;
+        }
+    }
+
+    public string? Email => httpContextAccessor.HttpContext?.User
+        .FindFirstValue(ClaimTypes.Email);
+
+    public bool EstaAutenticado => Id.HasValue;
+
+    public bool PossuiTipo(TipoUsuario tipoUsuario)
+    {
+        ClaimsPrincipal? user = httpContextAccessor.HttpContext?.User;
+
+        return user?.Identity?.IsAuthenticated == true && user.IsInRole(tipoUsuario.ToString());
+    }
+
+
+}
