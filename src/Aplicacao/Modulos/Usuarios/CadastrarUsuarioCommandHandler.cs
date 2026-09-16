@@ -1,4 +1,5 @@
 using FluentResults;
+using GeradorCertificados.Aplicacao.Modulos.Usuarios.Compartilhado;
 using GeradorCertificados.Aplicacao.Modulos.Usuarios.Util;
 using GeradorCertificados.Dominio.Compartilhado;
 using GeradorCertificados.Dominio.Compartilhado.Auth;
@@ -6,7 +7,6 @@ using MediatR;
 
 namespace GeradorCertificados.Aplicacao.Modulos.Usuarios;
 
-public sealed record CadastrarUsuarioCommand(string Email, string Senha) : IRequest<Result<Guid>>;
 public sealed class CadastrarUsuarioCommandHandler(
     IGerenciadorDeIdentidade gerenciadorDeIdentidade
 ) : IRequestHandler<CadastrarUsuarioCommand, Result<Guid>>

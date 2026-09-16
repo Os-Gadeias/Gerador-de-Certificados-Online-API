@@ -1,5 +1,6 @@
 using FluentResults;
 using GeradorCertificados.Aplicacao.Modulos.Usuarios;
+using GeradorCertificados.Aplicacao.Modulos.Usuarios.Compartilhado;
 using GeradorCertificados.WebApi.Compartilhado.Http;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -57,8 +58,21 @@ public class UsuariosController(
     }
 
     [HttpPost("login")]
-    public async Task<ActionResult> Login(CadastrarUsuarioRequest req)
+    [AllowAnonymous]
+    public async Task<ActionResult<AutenticarUsuarioDto>> Login(LogarUsuarioRequest req, CancellationToken cancellationToken)
     {
-        return Ok();
+        var resultado = await mediator.Send(new AutenticarUsuarioCommand(
+            req.Email,
+            req.Senha
+        ), cancellationToken);
+
+        if (resultado.IsFailed)
+            return this.ProblemDetails(resultado.ToResult());
+
+        return Ok(new AutenticarUsuarioDto(
+            resultado.Value.ClienteId,
+            resultado.Value.AccessToken,
+            resultado.Value.DataExpiracaoEmUtc
+        ));
     }
 }

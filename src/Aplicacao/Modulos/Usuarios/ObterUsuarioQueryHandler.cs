@@ -1,12 +1,12 @@
 using System.Net.Mail;
 using FluentResults;
+using GeradorCertificados.Aplicacao.Modulos.Usuarios.Compartilhado;
 using GeradorCertificados.Aplicacao.Modulos.Usuarios.Util;
 using GeradorCertificados.Dominio.Compartilhado.Auth;
 using MediatR;
 
 namespace GeradorCertificados.Aplicacao.Modulos.Usuarios;
 
-public sealed record ObterUsuarioPorIdQuery(Guid Id) : IRequest<Result<UsuarioDto>>;
 
 public class ObterUsuarioQueryHandler(
     IGerenciadorDeIdentidade gerenciadorDeIdentidade
