@@ -34,7 +34,7 @@ public class Curso : EntidadeBase<Curso>
         {
             erros.Add(new ErroValidacao(
                 nameof(Nome),
-                "O \"Nome\" deve conter entre 2 e 100 caracteres."
+                "O \"Nome\" deve conter entre 2 e 200 caracteres."
             ));
         }
 
