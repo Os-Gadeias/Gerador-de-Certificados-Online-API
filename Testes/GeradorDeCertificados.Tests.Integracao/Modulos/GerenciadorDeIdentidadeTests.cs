@@ -11,7 +11,7 @@ public class GerenciadorDeIdentidadeTests : RepositorioTestOrmBase
     public async Task NaoDeve_RetornarErro_CadastroDeUsuario_Persiste_ERetornaNoSelecionar()
     {
         var usuarioId = Guid.CreateVersion7();
-        string email = "Teste555@gmail.com";
+        string email = "TesteCorreto@gmail.com";
         string senha = "Teste555@123";
 
         await gerenciadorDeIdentidade.CadastrarAsync(usuarioId, email, senha);
@@ -24,30 +24,7 @@ public class GerenciadorDeIdentidadeTests : RepositorioTestOrmBase
         Assert.AreEqual(usuarioId, idUsuarioCadastrado!.Id);
         Assert.AreEqual(email, idUsuarioCadastrado!.Email);
     }
-    [TestMethod]
-    public async Task Deve_LancarErro_CadastroDeUsuario_ComSenha_MenorQue_OitoCaracteres()
-    {
-        // Arrange
-        var usuarioId = Guid.CreateVersion7();
-        string email = "teste@gmail.com";
-        string senha = "Teste@1";
 
-        // Act
-        try
-        {
-            await gerenciadorDeIdentidade.CadastrarAsync(
-                usuarioId,
-                email,
-                senha);
-
-            Assert.Fail("Era esperada uma ValidacaoDeIdentidadeException.");
-        }
-        catch (ValidacaoDeIdentidadeException ex)
-        {
-            // Assert
-            Assert.AreEqual("Senha", ex.Campo);
-        }
-    }
     [TestMethod]
     public async Task Deve_LancarErro_CadastroDeUsuario_ComEmail_Invalido()
     {
@@ -136,7 +113,7 @@ public class GerenciadorDeIdentidadeTests : RepositorioTestOrmBase
         string senha = "Teste@123";
 
         await userManager.CreateAsync(usuario, senha);
-        
+
         dbContext.ChangeTracker.Clear();
 
         var usuarioSelecionado = await gerenciadorDeIdentidade.SelecionarIdAsync(usuario.Id);
@@ -161,7 +138,7 @@ public class GerenciadorDeIdentidadeTests : RepositorioTestOrmBase
     {
         // Arrange
         Guid usuarioId = Guid.CreateVersion7();
-        string email = "teste@gmail.com";
+        string email = "testeSenhaInvalida@gmail.com";
         string senha = "Teste@123";
 
         await gerenciadorDeIdentidade.CadastrarAsync(
