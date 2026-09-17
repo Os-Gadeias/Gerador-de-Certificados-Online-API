@@ -7,7 +7,7 @@ public sealed class GerenciadorDeIdentidade(
     UserManager<IdentityUser<Guid>> userManager
 ) : IGerenciadorDeIdentidade
 {
-    public async Task<Guid> CadastrarAsync(
+    public async Task CadastrarAsync(
         Guid usuarioId,
         string email,
         string senha
@@ -25,7 +25,7 @@ public sealed class GerenciadorDeIdentidade(
         if (!resultadoUsuario.Succeeded)
             throw CriarErro(resultadoUsuario);
 
-        return usuario.Id;
+        return;
     }
 
     public async Task<UsuarioDto?> ChecarValidadeDeSenhaAsync(

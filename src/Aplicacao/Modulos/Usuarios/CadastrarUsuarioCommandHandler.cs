@@ -13,17 +13,17 @@ public sealed class CadastrarUsuarioCommandHandler(
 {
     public async Task<Result<Guid>> Handle(CadastrarUsuarioCommand command, CancellationToken cancellationToken)
     {
-        Guid id = Guid.CreateVersion7();
+        Guid idUsuarioCadastrado = Guid.CreateVersion7();
 
         try
         {
-            var usuarioId = await gerenciadorDeIdentidade.CadastrarAsync(
-                id,
-                command.Email,
-                command.Senha
-                );
+            await gerenciadorDeIdentidade.CadastrarAsync(
+               idUsuarioCadastrado,
+               command.Email,
+               command.Senha
+               );
 
-            return Result.Ok(usuarioId);
+            return Result.Ok(idUsuarioCadastrado);
         }
         catch (ConflitoDeIdentidadeException ex)
         {
@@ -35,7 +35,7 @@ public sealed class CadastrarUsuarioCommandHandler(
         }
         catch (ConflitoDePersistenciaException)
         {
-            await gerenciadorDeIdentidade.ExcluirAsync(id);
+            await gerenciadorDeIdentidade.ExcluirAsync(idUsuarioCadastrado);
 
             return Result.Fail(ErrosUsuario.CadastroDuplicado());
         }

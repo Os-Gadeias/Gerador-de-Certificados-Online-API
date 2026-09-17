@@ -13,7 +13,7 @@ public sealed record UsuarioDto(Guid Id, string Email);
 
 public interface IGerenciadorDeIdentidade
 {
-    Task<Guid> CadastrarAsync(
+    Task CadastrarAsync(
         Guid usuarioId,
         string email,
         string senha
