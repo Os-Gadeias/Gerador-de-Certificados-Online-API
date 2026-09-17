@@ -7,11 +7,10 @@ public sealed class GerenciadorDeIdentidade(
     UserManager<IdentityUser<Guid>> userManager
 ) : IGerenciadorDeIdentidade
 {
-    public async Task<UsuarioDto> CadastrarAsync(
+    public async Task<Guid> CadastrarAsync(
         Guid usuarioId,
         string email,
-        string senha,
-        TipoUsuario tipo
+        string senha
     )
     {
         var usuario = new IdentityUser<Guid>
@@ -26,22 +25,12 @@ public sealed class GerenciadorDeIdentidade(
         if (!resultadoUsuario.Succeeded)
             throw CriarErro(resultadoUsuario);
 
-        var resultadoPapel = await userManager.AddToRoleAsync(usuario, tipo.ToString());
-
-        if (!resultadoPapel.Succeeded)
-        {
-            await userManager.DeleteAsync(usuario);
-
-            throw CriarErro(resultadoPapel);
-        }
-
-        return new UsuarioDto(usuario.Id, usuario.Email);
+        return usuario.Id;
     }
 
     public async Task<UsuarioDto?> ChecarValidadeDeSenhaAsync(
         string email,
-        string senha,
-        TipoUsuario tipo
+        string senha
     )
     {
         var usuario = await userManager.FindByEmailAsync(email);
@@ -56,23 +45,20 @@ public sealed class GerenciadorDeIdentidade(
             return null;
         }
 
-        if (!await userManager.IsInRoleAsync(usuario, tipo.ToString()))
-            return null;
-
         if (usuario.AccessFailedCount > 0)
             await userManager.ResetAccessFailedCountAsync(usuario);
 
         return new UsuarioDto(usuario.Id, usuario.Email!);
     }
-
-    public async Task ExcluirAsync(Guid usuarioId)
+    public async Task<UsuarioDto?> SelecionarIdAsync(Guid id)
     {
-        var usuario = await userManager.FindByIdAsync(usuarioId.ToString());
+        var resultado = await userManager.FindByIdAsync(id.ToString());
 
-        if (usuario is not null)
-            await userManager.DeleteAsync(usuario);
+        if (resultado is null)
+            return null;
+
+        return new UsuarioDto(resultado.Id, resultado.Email!);
     }
-
     private static Exception CriarErro(IdentityResult resultado)
     {
         if (resultado.Errors.Any(
@@ -90,5 +76,13 @@ public sealed class GerenciadorDeIdentidade(
             : "Email";
 
         return new ValidacaoDeIdentidadeException(campo, erro.Description);
+    }
+
+    public async Task ExcluirAsync(Guid usuarioId)
+    {
+        var usuario = await userManager.FindByIdAsync(usuarioId.ToString());
+
+        if (usuario is not null)
+            await userManager.DeleteAsync(usuario);
     }
 }

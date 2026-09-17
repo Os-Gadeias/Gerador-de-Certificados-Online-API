@@ -1,0 +1,76 @@
+using FluentResults;
+using GeradorCertificados.Aplicacao.Modulos.Usuarios;
+using GeradorCertificados.Aplicacao.Modulos.Usuarios.Compartilhado;
+using GeradorCertificados.WebApi.Compartilhado.Http;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
+namespace GeradorCertificados.WebApi.Modulos.Usuarios;
+
+[ApiController]
+[Route("api/auth")]
+public class UsuariosController(
+    IMediator mediator
+    ) : ControllerBase
+{
+    [AllowAnonymous]
+    [HttpGet("{usuarioId:guid}")]
+    [ProducesResponseType<ObterUsuarioResponse>(StatusCodes.Status200OK)]
+    public async Task<ActionResult<ObterUsuarioResponse>> ObterPorId(Guid usuarioId)
+    {
+        var resultado = await mediator.Send(
+                new ObterUsuarioPorIdQuery(usuarioId)
+            );
+
+        if (resultado.IsFailed)
+            return this.ProblemDetails(resultado);
+
+        return Ok(new ObterUsuarioResponse(
+            resultado.Value.Id,
+            resultado.Value.Email)
+            );
+    }
+
+    [AllowAnonymous]
+    [HttpPost("cadastro")]
+    [ProducesResponseType<CadastrarUsuarioResponse>(StatusCodes.Status201Created)]
+    public async Task<ActionResult<CadastrarUsuarioResponse>> Cadastrar(
+        CadastrarUsuarioRequest req,
+        CancellationToken cancellationToken)
+    {
+        Result<Guid> resultado =
+            await mediator.Send(new CadastrarUsuarioCommand(req.Email, req.Senha), cancellationToken);
+
+        if (resultado.IsFailed)
+            return this.ProblemDetails(resultado);
+
+        return CreatedAtAction(
+            nameof(ObterPorId),
+            new { usuarioId = resultado.Value },
+            new CadastrarUsuarioResponse(
+                resultado.Value
+            )
+        );
+    }
+
+    [HttpPost("login")]
+    [ProducesResponseType<CadastrarUsuarioResponse>(StatusCodes.Status200OK)]
+    [AllowAnonymous]
+    public async Task<ActionResult<AutenticarUsuarioDto>> Login(LogarUsuarioRequest req, CancellationToken cancellationToken)
+    {
+        var resultado = await mediator.Send(new AutenticarUsuarioCommand(
+            req.Email,
+            req.Senha
+        ), cancellationToken);
+
+        if (resultado.IsFailed)
+            return this.ProblemDetails(resultado.ToResult());
+
+        return Ok(new AutenticarUsuarioDto(
+            resultado.Value.ClienteId,
+            resultado.Value.AccessToken,
+            resultado.Value.DataExpiracaoEmUtc
+        ));
+    }
+}
