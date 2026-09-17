@@ -4,6 +4,7 @@ using FizzWare.NBuilder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using GeradorCertificados.Infraestrutura.Compartilhado.Auth;
+using Microsoft.AspNetCore.Http.Features;
 
 namespace GeradorDeCertificados.Tests.Integracao.Compartilhado;
 
@@ -11,7 +12,7 @@ public abstract class RepositorioTestOrmBase
 {
     protected GeradorCertificadosDbContext dbContext = null!;
     //Configuracao do UserManager do EntityFramework
-    private UserManager<IdentityUser<Guid>> userManager = null!;
+    protected UserManager<IdentityUser<Guid>> userManager = null!;
     protected GerenciadorDeIdentidade gerenciadorDeIdentidade = null!;
 
     [TestInitialize]
@@ -44,8 +45,8 @@ public abstract class RepositorioTestOrmBase
 
         ServiceProvider serviceProvider = services.BuildServiceProvider();
 
-        UserManager<IdentityUser<Guid>> userManager =
-            serviceProvider.GetRequiredService<UserManager<IdentityUser<Guid>>>();
+        userManager =
+           serviceProvider.GetRequiredService<UserManager<IdentityUser<Guid>>>();
 
         gerenciadorDeIdentidade = new(userManager);
 
