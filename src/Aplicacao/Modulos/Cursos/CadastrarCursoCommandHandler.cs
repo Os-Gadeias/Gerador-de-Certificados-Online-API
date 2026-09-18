@@ -5,10 +5,10 @@ using MediatR;
 
 namespace GeradorCertificados.Aplicacao.Modulos.Cursos;
 
-public record CadastrarCursoCommand(string Nome, string Descricao, int CargaHoraria, DateTime DataConclusao) : IRequest<Result<Guid>>;
+public record CadastrarCursoCommand(string Nome, string? Descricao, int CargaHoraria, DateTime DataConclusao) : IRequest<Result<Guid>>;
 public class CadastrarCursoCommandHandler(IRepositorioCurso repositorioCurso) : IRequestHandler<CadastrarCursoCommand, Result<Guid>>
 {
-    public async Task<Result<Guid>> Handle(CadastrarCursoCommand command, CancellationToken cancellationToken)
+    public async Task<Result<Guid>> Handle(CadastrarCursoCommand command, CancellationToken cancellationToken = default)
     {
         Curso curso = new(
             command.Nome,
