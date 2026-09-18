@@ -11,4 +11,10 @@ public static class ErrosCurso
         .WithMetadata(nameof(TipoErro), TipoErro.Validacao)
             .WithMetadata("Campo", campo);
     }
+
+    public static Error ErroNaoEncontrado(string menssagem)
+    {
+        return new Error(menssagem)
+        .WithMetadata(nameof(TipoErro), TipoErro.NaoEncontrado);
+    }
 }
