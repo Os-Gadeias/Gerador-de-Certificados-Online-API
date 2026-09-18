@@ -1,6 +1,8 @@
 using GeradorCertificados.Dominio.Compartilhado.Auth;
+using GeradorCertificados.Dominio.Modulos.ModuloCertificado;
 using GeradorCertificados.Infraestrutura.Compartilhado.Auth;
 using GeradorCertificados.Infraestrutura.Compartilhado.Orm;
+using GeradorCertificados.Infraestrutura.Modulos.Certificados;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -17,6 +19,7 @@ public static class DependencyInjection
     )
     {
         services.AddScoped<IGerenciadorDeIdentidade, GerenciadorDeIdentidade>();
+        services.AddScoped<IRepositorioCertificado, RepositorioCertificadoOrm>();
 
         services.AddDataProtection();
         services.AddIdentityCore<IdentityUser<Guid>>(options =>
