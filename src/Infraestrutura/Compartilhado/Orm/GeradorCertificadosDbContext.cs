@@ -10,12 +10,18 @@ public sealed class GeradorCertificadosDbContext(
     IProvedorDeUsuario? provedorDeUsuario = null
 ) : IdentityDbContext<IdentityUser<Guid>, IdentityRole<Guid>, Guid>(options)
 {
+    DbSet<Curso> Cursos => Set<Curso>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(GeradorCertificadosDbContext).Assembly);
+
+        Guid? userId = provedorDeUsuario?.Id;
+
+        modelBuilder.Entity<Curso>()
+        .HasQueryFilter(c => c.UsuarioId == provedorDeUsuario!.Id);
 
     }
 

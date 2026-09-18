@@ -1,19 +1,20 @@
 using GeradorCertificados.Dominio.Compartilhado;
+using GeradorCertificados.Dominio.Compartilhado.Auth;
 
-public class Curso : EntidadeBase<Curso>
+public class Curso : EntidadeBase<Curso>, IEntidadeDeUsuario
 {
     public string Nome { get; set; } = string.Empty;
-    public string? Descrocao { get; set; } = string.Empty;
+    public string? Descricao { get; set; } = string.Empty;
     public int CargaHoraria { get; set; }
     public DateTime DataConclusao { get; set; } = DateTime.MinValue;
-
+    public Guid UsuarioId { get; set; }
 
     public Curso() { }
 
     public Curso(string nome, string? descrocao, int cargaHoraria, DateTime dataConclusao)
     {
         Nome = nome;
-        Descrocao = descrocao;
+        Descricao = descrocao;
         CargaHoraria = cargaHoraria;
         DataConclusao = dataConclusao;
     }
@@ -21,7 +22,7 @@ public class Curso : EntidadeBase<Curso>
     public override void Atualizar(Curso entidadeAtualizada)
     {
         Nome = entidadeAtualizada.Nome;
-        Descrocao = entidadeAtualizada.Descrocao;
+        Descricao = entidadeAtualizada.Descricao;
         CargaHoraria = entidadeAtualizada.CargaHoraria;
         DataConclusao = entidadeAtualizada.DataConclusao;
     }
@@ -38,10 +39,10 @@ public class Curso : EntidadeBase<Curso>
             ));
         }
 
-        if (Descrocao?.Length > 500)
+        if (Descricao?.Length > 500)
         {
             erros.Add(new ErroValidacao(
-                nameof(Descrocao),
+                nameof(Descricao),
                 "O campo \"Descricao\" deve conter no maximo 500 caracteres"
             ));
         }
