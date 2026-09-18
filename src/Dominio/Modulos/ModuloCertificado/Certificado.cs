@@ -7,6 +7,16 @@ public class Certificado : EntidadeBase<Certificado>
     public string NomeAluno { get; set; } = string.Empty;
     public Curso Curso { get; set; } = null!;
     public StatusCertificado StatusCertificado { get; private set; } = StatusCertificado.Pendente;
+
+    private Certificado()
+    {
+
+    }
+    public Certificado(string nomeAluno, Curso curso)
+    {
+        NomeAluno = nomeAluno;
+        Curso = curso;
+    }
     public override void Atualizar(Certificado entidadeAtualizada)
     {
         NomeAluno = entidadeAtualizada.NomeAluno;

@@ -3,216 +3,206 @@ using GeradorCertificados.Dominio.Modulos.ModuloCertificado;
 namespace GeradorDeCertificados.Tests.Unitario.Modulos.Certificados;
 
 [TestClass]
-public sealed class CertificadosTests()
+public sealed class CertificadosTests
 {
-    [TestClass]
-    public class CertificadoTests
+    [TestMethod]
+    public void DeveCriarCertificadoComStatusPendente()
     {
-        [TestMethod]
-        public void DeveCriarCertificadoComStatusPendente()
-        {
-            // Arrange
-            Certificado certificado = new();
+        // Arrange
+        Certificado certificado = new(
+            "Thiago Kovalski",
+            new Curso());
 
-            // Assert
-            Assert.AreEqual(
-                StatusCertificado.Pendente,
-                certificado.StatusCertificado);
-        }
+        // Assert
+        Assert.AreEqual(
+            StatusCertificado.Pendente,
+            certificado.StatusCertificado);
+    }
 
-        [TestMethod]
-        public void DeveValidarCertificadoComDadosValidos()
-        {
-            // Arrange
-            Certificado certificado = new()
-            {
-                NomeAluno = "Thiago Kovalski",
-                Curso = new Curso()
-            };
+    [TestMethod]
+    public void DeveValidarCertificadoComDadosValidos()
+    {
+        // Arrange
+        Certificado certificado = new(
+            "Thiago Kovalski",
+            new Curso());
 
-            // Act
-            var erros = certificado.Validar();
+        // Act
+        var erros = certificado.Validar();
 
-            // Assert
-            Assert.IsEmpty(erros);
-        }
+        // Assert
+        Assert.IsEmpty(erros);
+    }
 
-        [TestMethod]
-        public void DeveRetornarErroQuandoNomeAlunoNaoForInformado()
-        {
-            // Arrange
-            Certificado certificado = new()
-            {
-                NomeAluno = null!,
-                Curso = new Curso()
-            };
+    [TestMethod]
+    public void DeveRetornarErroQuandoNomeAlunoNaoForInformado()
+    {
+        // Arrange
+        Certificado certificado = new(
+            null!,
+            new Curso());
 
-            // Act
-            var erros = certificado.Validar();
+        // Act
+        var erros = certificado.Validar();
 
-            // Assert
-            Assert.HasCount(1, erros);
-            Assert.AreEqual(nameof(Certificado.NomeAluno), erros[0].Campo);
-        }
+        // Assert
+        Assert.HasCount(1, erros);
+        Assert.AreEqual(
+            nameof(Certificado.NomeAluno),
+            erros[0].Campo);
+    }
 
-        [TestMethod]
-        [DataRow("A")]
-        [DataRow("")]
-        public void DeveRetornarErroQuandoNomeAlunoTiverMenosDe2Caracteres(
-            string nomeAluno)
-        {
-            // Arrange
-            Certificado certificado = new()
-            {
-                NomeAluno = nomeAluno,
-                Curso = new Curso()
-            };
+    [TestMethod]
+    [DataRow("A")]
+    [DataRow("")]
+    public void DeveRetornarErroQuandoNomeAlunoTiverMenosDe2Caracteres(
+        string nomeAluno)
+    {
+        // Arrange
+        Certificado certificado = new(
+            nomeAluno,
+            new Curso());
 
-            // Act
-            var erros = certificado.Validar();
+        // Act
+        var erros = certificado.Validar();
 
-            // Assert
-            Assert.HasCount(1, erros);
-            Assert.AreEqual(nameof(Certificado.NomeAluno), erros[0].Campo);
-        }
+        // Assert
+        Assert.HasCount(1, erros);
+        Assert.AreEqual(
+            nameof(Certificado.NomeAluno),
+            erros[0].Campo);
+    }
 
-        [TestMethod]
-        public void DeveRetornarErroQuandoNomeAlunoTiverMaisDe200Caracteres()
-        {
-            // Arrange
-            Certificado certificado = new()
-            {
-                NomeAluno = new string('A', 201),
-                Curso = new Curso()
-            };
+    [TestMethod]
+    public void DeveRetornarErroQuandoNomeAlunoTiverMaisDe200Caracteres()
+    {
+        // Arrange
+        string nomeAluno = new string('A', 201);
 
-            // Act
-            var erros = certificado.Validar();
+        Certificado certificado = new(
+            nomeAluno,
+            new Curso());
 
-            // Assert
-            Assert.HasCount(1, erros);
-            Assert.AreEqual(nameof(Certificado.NomeAluno), erros[0].Campo);
-        }
+        // Act
+        var erros = certificado.Validar();
 
-        [TestMethod]
-        public void DeveAceitarNomeAlunoCom2Caracteres()
-        {
-            // Arrange
-            Certificado certificado = new()
-            {
-                NomeAluno = "Jo",
-                Curso = new Curso()
-            };
+        // Assert
+        Assert.HasCount(1, erros);
+        Assert.AreEqual(
+            nameof(Certificado.NomeAluno),
+            erros[0].Campo);
+    }
 
-            // Act
-            var erros = certificado.Validar();
+    [TestMethod]
+    public void DeveAceitarNomeAlunoCom2Caracteres()
+    {
+        // Arrange
+        Certificado certificado = new(
+            "Jo",
+            new Curso());
 
-            // Assert
-            Assert.IsEmpty(erros);
-        }
+        // Act
+        var erros = certificado.Validar();
 
-        [TestMethod]
-        public void DeveAceitarNomeAlunoCom200Caracteres()
-        {
-            // Arrange
-            Certificado certificado = new()
-            {
-                NomeAluno = new string('A', 200),
-                Curso = new Curso()
-            };
+        // Assert
+        Assert.IsEmpty(erros);
+    }
 
-            // Act
-            var erros = certificado.Validar();
+    [TestMethod]
+    public void DeveAceitarNomeAlunoCom200Caracteres()
+    {
+        // Arrange
+        string nomeAluno = new string('A', 200);
 
-            // Assert
-            Assert.IsEmpty(erros);
-        }
+        Certificado certificado = new(
+            nomeAluno,
+            new Curso());
 
-        [TestMethod]
-        public void DeveRetornarErroQuandoCursoNaoForInformado()
-        {
-            // Arrange
-            Certificado certificado = new()
-            {
-                NomeAluno = "Thiago Kovalski",
-                Curso = null!
-            };
+        // Act
+        var erros = certificado.Validar();
 
-            // Act
-            var erros = certificado.Validar();
+        // Assert
+        Assert.IsEmpty(erros);
+    }
 
-            // Assert
-            Assert.HasCount(1, erros);
-            Assert.AreEqual(nameof(Certificado.Curso), erros[0].Campo);
-        }
+    [TestMethod]
+    public void DeveRetornarErroQuandoCursoNaoForInformado()
+    {
+        // Arrange
+        Certificado certificado = new(
+            "Thiago Kovalski",
+            null!);
 
-        [TestMethod]
-        public void DeveRetornarDoisErrosQuandoNomeEcursoNaoForemInformados()
-        {
-            // Arrange
-            Certificado certificado = new()
-            {
-                NomeAluno = null!,
-                Curso = null!
-            };
+        // Act
+        var erros = certificado.Validar();
 
-            // Act
-            var erros = certificado.Validar();
+        // Assert
+        Assert.HasCount(1, erros);
+        Assert.AreEqual(
+            nameof(Certificado.Curso),
+            erros[0].Campo);
+    }
 
-            // Assert
-            Assert.HasCount(2, erros);
-        }
+    [TestMethod]
+    public void DeveRetornarDoisErrosQuandoNomeEcursoNaoForemInformados()
+    {
+        // Arrange
+        Certificado certificado = new(
+            null!,
+            null!);
 
-        [TestMethod]
-        public void DeveAtualizarNomeAlunoECurso()
-        {
-            // Arrange
-            Certificado certificado = new()
-            {
-                NomeAluno = "Aluno Antigo",
-                Curso = new Curso()
-            };
+        // Act
+        var erros = certificado.Validar();
 
-            Curso novoCurso = new Curso();
+        // Assert
+        Assert.HasCount(2, erros);
+    }
 
-            Certificado certificadoAtualizado = new()
-            {
-                NomeAluno = "Aluno Novo",
-                Curso = novoCurso
-            };
+    [TestMethod]
+    public void DeveAtualizarNomeAlunoECurso()
+    {
+        // Arrange
+        Certificado certificado = new(
+            "Aluno Antigo",
+            new Curso());
 
-            // Act
-            certificado.Atualizar(certificadoAtualizado);
+        Curso novoCurso = new();
 
-            // Assert
-            Assert.AreEqual("Aluno Novo", certificado.NomeAluno);
-            Assert.AreSame(novoCurso, certificado.Curso);
-        }
+        Certificado certificadoAtualizado = new(
+            "Aluno Novo",
+            novoCurso);
 
-        [TestMethod]
-        public void NaoDeveAlterarStatusAoAtualizarCertificado()
-        {
-            // Arrange
-            Certificado certificado = new()
-            {
-                NomeAluno = "Aluno Antigo",
-                Curso = new Curso()
-            };
+        // Act
+        certificado.Atualizar(certificadoAtualizado);
 
-            Certificado certificadoAtualizado = new()
-            {
-                NomeAluno = "Aluno Novo",
-                Curso = new Curso()
-            };
+        // Assert
+        Assert.AreEqual(
+            "Aluno Novo",
+            certificado.NomeAluno);
 
-            // Act
-            certificado.Atualizar(certificadoAtualizado);
+        Assert.AreSame(
+            novoCurso,
+            certificado.Curso);
+    }
 
-            // Assert
-            Assert.AreEqual(
-                StatusCertificado.Pendente,
-                certificado.StatusCertificado);
-        }
+    [TestMethod]
+    public void NaoDeveAlterarStatusAoAtualizarCertificado()
+    {
+        // Arrange
+        Certificado certificado = new(
+            "Aluno Antigo",
+            new Curso());
 
+        Certificado certificadoAtualizado = new(
+            "Aluno Novo",
+            new Curso());
+
+        // Act
+        certificado.Atualizar(certificadoAtualizado);
+
+        // Assert
+        Assert.AreEqual(
+            StatusCertificado.Pendente,
+            certificado.StatusCertificado);
     }
 }
