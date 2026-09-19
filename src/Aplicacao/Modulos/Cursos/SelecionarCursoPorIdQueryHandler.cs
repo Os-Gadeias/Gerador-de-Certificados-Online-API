@@ -12,13 +12,13 @@ public record SelecionarCursoPorIdQuery(Guid Id) : IRequest<Result<CursoDto>>;
 
 public class SelecionarCursoPorIdQueryHandler(IRepositorioCurso repositorio) : IRequestHandler<SelecionarCursoPorIdQuery, Result<CursoDto>>
 {
-    public async Task<Result<CursoDto>> Handle(SelecionarCursoPorIdQuery request, CancellationToken cancellationToken)
+    public async Task<Result<CursoDto>> Handle(SelecionarCursoPorIdQuery request, CancellationToken cancellationToken = default)
     {
         Curso? curso = await repositorio.SelecionarPorIdAsync(request.Id);
 
         if (curso is null)
         {
-            Result.Fail(ErrosCurso.ErroNaoEncontrado(
+            return Result.Fail(ErrosCurso.ErroNaoEncontrado(
                 $"O \"curso\" com o Id {request.Id} não foi encontrado"));
         }
 
