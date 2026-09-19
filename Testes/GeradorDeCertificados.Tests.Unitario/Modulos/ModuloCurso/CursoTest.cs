@@ -34,7 +34,7 @@ public class CursoTest
         var erros = curso.Validar();
 
         Assert.HasCount(1, erros);
-        Assert.AreEqual(nameof(Curso.Descrocao), erros.First().Campo);
+        Assert.AreEqual(nameof(Curso.Descricao), erros.First().Campo);
         Assert.AreEqual("O campo \"Descricao\" deve conter no maximo 500 caracteres", erros.First().Mensagem);
     }
 
