@@ -1,4 +1,5 @@
 using GeradorCertificados.Aplicacao.Modulos.Cursos;
+using GeradorCertificados.Aplicacao.Modulos.Dtos.Cursos;
 using GeradorCertificados.WebApi.Compartilhado.Http;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -24,5 +25,18 @@ public class CursoController(IMediator mediator) : ControllerBase
         }
 
         return new CadastrarCursoResponce(result.Value);
+    }
+
+    [HttpGet("{Id:guid}")]
+    public async Task<ActionResult<CursoDto>> SelecionarPorId(Guid Id)
+    {
+        var result = await mediator.Send(new SelecionarCursoPorIdQuery(Id));
+
+        if (result.IsFailed)
+        {
+            return this.ProblemDetails(result);
+        }
+
+        return Ok(result.Value);
     }
 }

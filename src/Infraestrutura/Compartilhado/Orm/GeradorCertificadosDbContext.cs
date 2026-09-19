@@ -10,7 +10,7 @@ public sealed class GeradorCertificadosDbContext(
     IProvedorDeUsuario? provedorDeUsuario = null
 ) : IdentityDbContext<IdentityUser<Guid>, IdentityRole<Guid>, Guid>(options)
 {
-    DbSet<Curso> Cursos => Set<Curso>();
+    public DbSet<Curso> Cursos => Set<Curso>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
