@@ -2,6 +2,8 @@ using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 
+// ai ai 
+
 namespace GeradorCertificados.Dominio.Modulos.ModuloCertificado;
 
 public class Certificado : IDocument
