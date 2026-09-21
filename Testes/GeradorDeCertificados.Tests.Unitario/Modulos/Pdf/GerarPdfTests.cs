@@ -1,4 +1,4 @@
-using GeradorCertificados.Aplicacao.GerarPdf;
+using GeradorCertificados.Aplicacao.PdfGeneretor;
 using QuestPDF.Infrastructure;
 using UglyToad.PdfPig;
 using UglyToad.PdfPig.DocumentLayoutAnalysis.TextExtractor;

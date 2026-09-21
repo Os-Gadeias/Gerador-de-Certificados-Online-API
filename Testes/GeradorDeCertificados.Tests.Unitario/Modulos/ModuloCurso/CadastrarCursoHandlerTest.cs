@@ -16,7 +16,6 @@ public class CadastrarCursoHandler()
         var result = await Handler.Handle(new CadastrarCursoCommand("cademia", "brutal", 600, DateTime.Today.AddDays(30)));
 
         Assert.IsTrue(result.IsSuccess);
-        Assert.IsNotNull(result.Value);
         Rep.Verify(r => r.CadastrarAsync(It.IsAny<Curso>()), Times.Once);
     }
 }

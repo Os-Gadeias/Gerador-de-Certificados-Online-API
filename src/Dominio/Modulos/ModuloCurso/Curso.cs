@@ -9,7 +9,7 @@ public class Curso : EntidadeBase<Curso>, IEntidadeDeUsuario
     public DateTime DataConclusao { get; set; } = DateTime.MinValue;
     public Guid UsuarioId { get; set; }
     public List<Certificado> Certificados = [];
-    public StatusGeracaoCertificado Status { get; private set; } = StatusGeracaoCertificado.NaoIniciado;
+    public StatusCurso Status { get; private set; } = StatusCurso.Disponivel;
     public Curso() { }
 
     public Curso(string nome, string? descrocao, int cargaHoraria, DateTime dataConclusao)
