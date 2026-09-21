@@ -27,17 +27,15 @@ public class SolicitaGeracaoCertificadoCommandHandler(
         if (cursoSelecionado is null)
             return Result.Fail(ErrosCurso.ErroNaoEncontrado("Curso não encontrado!"));
 
-        //add curso as listas
-        var erro = cursoSelecionado.AdicionarAlunos(command.NomesAlunos);
+        List<string> alunosComNomeValidos = [];
 
-        //verificar se tem algum aluno com o nome invalido  
-        if (erro is not null)
-            return Result.Fail(ErrosCurso.Validacao("Aluno com nome inválido na lista!"));
+        foreach (string nome in command.NomesAlunos)
+        {
+            if (nome.Length is < 2 or > 200)
+                continue;
 
-        bool conseguiuEditar = await repositorioCurso.EditarAsync(cursoSelecionado.Id, cursoSelecionado);
-
-        if (!conseguiuEditar)
-            return Result.Fail($"Ocorreu um erro ao adicionar a lista de alunos ao curso com o Id: {cursoSelecionado.Id}");
+            alunosComNomeValidos.Add(nome);
+        }
 
         await bus.Publish(cursoSelecionado);
 

@@ -6,7 +6,13 @@ namespace GeradorCertificados.Aplicacao.Consumers;
 public class SolicitarCertificadoComsumer
     (
         ILogger<SolicitarCertificadoComsumer> logger
-    ) : IConsumer
+    ) : IConsumer<SolicitarCertificadosMessages>
 {
+    public async Task Consume(ConsumeContext<SolicitarCertificadosMessages> context)
+    {
+        var mensagem = context.Message;
 
+        
+    }
 }
+
