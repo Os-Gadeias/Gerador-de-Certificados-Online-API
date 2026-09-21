@@ -28,6 +28,11 @@ public class Curso : EntidadeBase<Curso>, IEntidadeDeUsuario
         DataConclusao = entidadeAtualizada.DataConclusao;
     }
 
+    public void AlterarParaGerandoCertificados()
+    {
+        Status = StatusCurso.GerandoCertificados;
+    }
+
     public override IReadOnlyList<ErroValidacao> Validar()
     {
         List<ErroValidacao> erros = [];

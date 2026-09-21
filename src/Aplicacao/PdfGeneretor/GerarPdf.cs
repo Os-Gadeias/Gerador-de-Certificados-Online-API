@@ -1,3 +1,4 @@
+using GeradorCertificados.Dominio.Modulos.ModuloCertificado;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 
@@ -5,7 +6,7 @@ namespace GeradorCertificados.Aplicacao.PdfGeneretor;
 
 public static class GerarPdf
 {
-    public static byte[] Gerar(string nomeAluno, Curso curso)
+    public static byte[] Gerar(Certificado certificado)
     {
         var document = Document.Create(container =>
         {
@@ -28,21 +29,21 @@ public static class GerarPdf
 
                         column.Item()
                             .PaddingTop(10)
-                            .Text(nomeAluno)
+                            .Text(certificado.NomeAluno)
                             .FontSize(24)
                             .Bold();
 
                         column.Item()
                             .PaddingTop(20)
-                            .Text($"concluiu o curso {curso.Nome}: {curso.Descricao}.");
+                            .Text($"concluiu o curso {certificado.Curso.Nome}: {certificado.Curso.Descricao}.");
 
                         column.Item()
                             .PaddingTop(10)
-                            .Text($"Carga horária: {curso.CargaHoraria}");
+                            .Text($"Carga horária: {certificado.Curso.CargaHoraria}");
 
                         column.Item()
                             .PaddingTop(30)
-                            .Text($"Data de conclusão: {curso.DataConclusao}");
+                            .Text($"Data de conclusão: {certificado.Curso.DataConclusao}");
                     });
             });
         });

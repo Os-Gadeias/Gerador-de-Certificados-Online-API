@@ -61,4 +61,14 @@ public class CursoTest
         Assert.AreEqual(nameof(Curso.DataConclusao), erros.First().Campo);
         Assert.AreEqual("O campo \"Data de Conclusão\" deve ser  preenchida", erros.First().Mensagem);
     }
+    [TestMethod]
+    public void AlterarParaStatusParaGerandoCertificados_RetornaCursoComStatusCorreto()
+    {
+        var curso = new Curso("Curso de Teste", "Descrição válida", 40, DateTime.MinValue);
+
+        curso.AlterarParaGerandoCertificados();
+
+        Assert.AreEqual(StatusCurso.GerandoCertificados, curso.Status);
+
+    }
 }

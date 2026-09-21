@@ -1,4 +1,5 @@
 using GeradorCertificados.Aplicacao.PdfGeneretor;
+using GeradorCertificados.Dominio.Modulos.ModuloCertificado;
 using QuestPDF.Infrastructure;
 using UglyToad.PdfPig;
 using UglyToad.PdfPig.DocumentLayoutAnalysis.TextExtractor;
@@ -24,7 +25,7 @@ public class GerarPdfTests
             900,
             DateTime.Now.AddDays(30)
         );
-        var certificado = GerarPdf.Gerar(nomeAluno, curso);
+        var certificado = GerarPdf.Gerar(new Certificado(nomeAluno, curso));
 
         string textoDoPdf = TextoLerDocumento(certificado);
 
