@@ -4,7 +4,7 @@ public enum StatusGeracaoCertificado
 {
     NaoIniciado,
     Pendente,
-    GerandoCertificados,
+    GerandoCertificado,
     GerandoZip,
     Concluído,
     Falha
