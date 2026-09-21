@@ -6,7 +6,7 @@ using GeradorCertificados.Dominio.Modulos.ModuloCurso;
 using MassTransit;
 using MediatR;
 
-namespace GeradorCertificados.Aplicacao.Modulos.Cursos;
+namespace GeradorCertificados.Aplicacao.Modulos.Certificados;
 
 public sealed record SolicitarGeracaoResponse(
     List<Guid> IdCertificados,
