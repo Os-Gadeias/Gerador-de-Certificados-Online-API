@@ -1,6 +1,8 @@
+using GeradorCertificados.Dominio.Modulos.ModuloCertificado;
+
 namespace GeradorCertificados.Aplicacao.Consumers;
 
 public record SolicitarCertificadosMessages(
-    List<string> NomeAlunos,
-    Guid CursoId
+    Guid IdCurso,
+    List<Guid> IdsCertificados
 );
