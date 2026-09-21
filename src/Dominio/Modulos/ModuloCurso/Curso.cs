@@ -10,6 +10,7 @@ public class Curso : EntidadeBase<Curso>, IEntidadeDeUsuario
     public Guid UsuarioId { get; set; }
     public List<Certificado> Certificados = [];
     public StatusCurso Status { get; private set; } = StatusCurso.Disponivel;
+    public string? CaminhoZip { get; set; }
     public Curso() { }
 
     public Curso(string nome, string? descrocao, int cargaHoraria, DateTime dataConclusao)
@@ -22,15 +23,25 @@ public class Curso : EntidadeBase<Curso>, IEntidadeDeUsuario
 
     public override void Atualizar(Curso entidadeAtualizada)
     {
-        Nome = entidadeAtualizada.Nome;
-        Descricao = entidadeAtualizada.Descricao;
-        CargaHoraria = entidadeAtualizada.CargaHoraria;
-        DataConclusao = entidadeAtualizada.DataConclusao;
+        Status = entidadeAtualizada.Status;
+        CaminhoZip = entidadeAtualizada.CaminhoZip;
     }
 
     public void AlterarParaGerandoCertificados()
     {
         Status = StatusCurso.GerandoCertificados;
+    }
+    public void AlterarParaDisponivel()
+    {
+        Status = StatusCurso.Disponivel;
+    }
+    public void AlterarParaFalha()
+    {
+        Status = StatusCurso.Falha;
+    }
+    public void AdicionarCaminhoDoZip(string caminhoZip)
+    {
+        CaminhoZip = caminhoZip;
     }
 
     public override IReadOnlyList<ErroValidacao> Validar()

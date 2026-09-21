@@ -12,19 +12,27 @@ public class CertificadoConfiguration : IEntityTypeConfiguration<Certificado>
 
         //Talvez seja necessário aplicar o IEntidadeDoUsuarioAqui
         //Para a navegacao
-        
+
         builder.ToTable("TBCertificado");
 
         builder.HasKey(c => c.Id);
-        builder.Property(c => c.Id)
-            .ValueGeneratedNever();
 
         builder.Property(c => c.NomeAluno)
-            .IsRequired();
+            .IsRequired()
+            .HasMaxLength(200);
+
+        builder.Property(c => c.CaminhoPdf)
+            .HasMaxLength(500);
+
+        builder.Property(c => c.Status)
+            .IsRequired()
+            .HasConversion<string>();
+
 
         builder.HasOne(c => c.Curso)
-            .WithMany(c => c.Certificados)
-            .HasForeignKey(c => c.Id);
+            .WithMany()
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Restrict);
     }
 
 }

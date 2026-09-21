@@ -1,5 +1,6 @@
 public enum StatusCurso
 {
     Disponivel,
-    GerandoCertificados
+    GerandoCertificados,
+    Falha
 }

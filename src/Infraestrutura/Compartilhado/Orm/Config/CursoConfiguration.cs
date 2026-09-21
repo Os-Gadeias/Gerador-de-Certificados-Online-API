@@ -11,9 +11,6 @@ public class CursoConfiguration : IEntityTypeConfiguration<Curso>
 
         builder.HasKey(c => c.Id);
 
-        builder.Property(c => c.Id)
-            .ValueGeneratedNever();
-
         builder.Property(c => c.Nome)
             .IsRequired()
             .HasMaxLength(200);
@@ -27,8 +24,11 @@ public class CursoConfiguration : IEntityTypeConfiguration<Curso>
         builder.Property(c => c.DataConclusao)
             .IsRequired();
 
-        builder.HasMany(c => c.Certificados)
-            .WithOne(c => c.Curso)
-            .OnDelete(DeleteBehavior.Cascade);
+        builder.Property(c => c.UsuarioId)
+            .IsRequired();
+
+        builder.Property(c => c.Status)
+            .IsRequired()
+            .HasConversion<string>();
     }
 }
