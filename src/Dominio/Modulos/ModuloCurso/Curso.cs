@@ -1,5 +1,6 @@
 using GeradorCertificados.Dominio.Compartilhado;
 using GeradorCertificados.Dominio.Compartilhado.Auth;
+using GeradorCertificados.Dominio.Modulos.ModuloCertificado;
 
 public class Curso : EntidadeBase<Curso>, IEntidadeDeUsuario
 {
@@ -8,7 +9,7 @@ public class Curso : EntidadeBase<Curso>, IEntidadeDeUsuario
     public int CargaHoraria { get; set; }
     public DateTime DataConclusao { get; set; } = DateTime.MinValue;
     public Guid UsuarioId { get; set; }
-
+    public List<Certificado> Certificados = []; 
     public Curso() { }
 
     public Curso(string nome, string? descrocao, int cargaHoraria, DateTime dataConclusao)

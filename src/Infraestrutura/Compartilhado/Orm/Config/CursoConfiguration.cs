@@ -26,5 +26,9 @@ public class CursoConfiguration : IEntityTypeConfiguration<Curso>
 
         builder.Property(c => c.DataConclusao)
             .IsRequired();
+
+        builder.HasMany(c => c.Certificados)
+            .WithOne(c => c.Curso)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }
