@@ -17,4 +17,9 @@ public static class ErrosCurso
         return new Error(menssagem)
         .WithMetadata(nameof(TipoErro), TipoErro.NaoEncontrado);
     }
+    public static Error Validacao(string menssagem)
+    {
+        return new Error(menssagem)
+        .WithMetadata(nameof(TipoErro), TipoErro.Validacao);
+    }
 }
