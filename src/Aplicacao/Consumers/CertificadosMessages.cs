@@ -4,5 +4,6 @@ namespace GeradorCertificados.Aplicacao.Consumers;
 
 public record SolicitarCertificadosMessages(
     Guid IdCurso,
-    List<Guid> IdsCertificados
+    List<Guid> IdsCertificados,
+    Guid UsuarioId
 );

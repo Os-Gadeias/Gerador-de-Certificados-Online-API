@@ -55,7 +55,8 @@ public class SolicitaGeracaoCertificadoCommandHandler(
         //manda os ids dos certificados e o id do curso
         await bus.Publish(new SolicitarCertificadosMessages(
             cursoSelecionado.Id,
-            certificados.Select(c => c.Id).ToList()
+            certificados.Select(c => c.Id).ToList(),
+            cursoSelecionado.UsuarioId
         ));
 
         //Retorna os Ids e nomes dos alunos

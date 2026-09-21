@@ -7,4 +7,6 @@ public interface IProvedorDeUsuario
     bool EstaAutenticado { get; }
 
     bool PossuiTipo(TipoUsuario tipoUsuario);
+
+    void DefinirUsuario(Guid usuarioId);
 }

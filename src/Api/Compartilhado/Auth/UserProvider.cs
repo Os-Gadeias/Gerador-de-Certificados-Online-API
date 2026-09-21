@@ -5,10 +5,15 @@ namespace GeradorCertificados.WebApi.Compartilhado.Auth;
 
 public sealed class UserProvider(IHttpContextAccessor httpContextAccessor) : IProvedorDeUsuario
 {
+    private Guid? usuarioDefinido;
+
     public Guid? Id
     {
         get
         {
+            if (usuarioDefinido.HasValue)
+                return usuarioDefinido;
+
             ClaimsPrincipal? user = httpContextAccessor.HttpContext?.User;
 
             if (user?.Identity is null || !user.Identity.IsAuthenticated)
@@ -35,5 +40,9 @@ public sealed class UserProvider(IHttpContextAccessor httpContextAccessor) : IPr
         return user?.Identity?.IsAuthenticated == true && user.IsInRole(tipoUsuario.ToString());
     }
 
+    public void DefinirUsuario(Guid usuarioId)
+    {
+        usuarioDefinido = usuarioId;
+    }
 
 }
