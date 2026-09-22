@@ -1,4 +1,5 @@
 using GeradorCertificados.Aplicacao.Modulos.Certificados;
+using GeradorCertificados.Aplicacao.Modulos.Certificados.DTOs;
 using GeradorCertificados.WebApi.Compartilhado.Http;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -40,5 +41,18 @@ public class CertificadosController(IMediator mediator) : ControllerBase
             "application/zip",
             resultado.Value.NomeArquivo
         );
+    }
+
+    [HttpGet("{cursoId:guid}/status")]
+    public async Task<ActionResult<SelecionarCursoResponse>> ConsultaProcessamento(Guid cursoId)
+    {
+        var result = await mediator.Send(new
+            SelecionarCursoPorIDQuery(cursoId)
+        );
+
+        if (result.IsFailed)
+            return this.ProblemDetails(result);
+
+        return Ok(result.Value);
     }
 }

@@ -45,4 +45,5 @@ public class CursoController(IMediator mediator) : ControllerBase
 
         return Ok(result.Value);
     }
+
 }
