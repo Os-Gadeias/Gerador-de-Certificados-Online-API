@@ -35,101 +35,89 @@ public class SolicitarCertificadoComsumer
             curso.Id,
             curso);
 
-        //Seleciona cada Certificado e começa a fazer as alteracoes e gerar o certificado
-        foreach (Guid idCertificado in mensagem.IdsCertificados)
+        try
         {
-            var certificadoSelecionado = await repositorioCertificado.SelecionarPorIdAsync(idCertificado)
-            ?? throw new NullReferenceException();
-
-            //atualiza o status do certificado para GerandoCertificado
-            certificadoSelecionado.AlterarParaGerandoCertificado();
-
-            await repositorioCertificado.EditarAsync(
-                certificadoSelecionado.Id,
-                certificadoSelecionado
-            );
-            try
+            //Seleciona cada Certificado e começa a fazer as alteracoes e gerar o certificado
+            foreach (Guid idCertificado in mensagem.IdsCertificados)
             {
-                var pdfCertificado = GerarPdf.Gerar(certificadoSelecionado);
+                var certificadoSelecionado = await repositorioCertificado.SelecionarPorIdAsync(idCertificado)
+                ?? throw new NullReferenceException();
 
-                var caminhoPdf = SalvarPdf(
-                pdfCertificado,
-                certificadoSelecionado.Id
-            );
-
-                certificadoSelecionado.AddCaminhoDePdf(caminhoPdf);
+                //atualiza o status do certificado para GerandoCertificado
+                certificadoSelecionado.AlterarParaGerandoCertificado();
 
                 await repositorioCertificado.EditarAsync(
                     certificadoSelecionado.Id,
                     certificadoSelecionado
                 );
-            }
-            catch (Exception)
-            {
-                certificadoSelecionado.AlterarParaFalha();
-                await repositorioCertificado.EditarAsync(
-                    certificadoSelecionado.Id,
-                    certificadoSelecionado
+                try
+                {
+                    var pdfCertificado = GerarPdf.Gerar(certificadoSelecionado);
+
+                    var caminhoPdf = SalvarPdf(
+                    pdfCertificado,
+                    certificadoSelecionado.Id
                 );
-                return;
+
+                    certificadoSelecionado.AddCaminhoDePdf(caminhoPdf);
+
+                    await repositorioCertificado.EditarAsync(
+                        certificadoSelecionado.Id,
+                        certificadoSelecionado
+                    );
+                }
+                catch (Exception)
+                {
+                    certificadoSelecionado.AlterarParaFalha();
+                    await repositorioCertificado.EditarAsync(
+                        certificadoSelecionado.Id,
+                        certificadoSelecionado
+                    );
+                    throw;
+                }
             }
 
-            // Busca somente os certificados dessa solicitação
-            List<Certificado> certificados = [];
-
-            foreach (Guid idsCertificados in mensagem.IdsCertificados)
-            {
-                var certificado =
-                    await repositorioCertificado.SelecionarPorIdAsync(idsCertificados)
-                    ?? throw new NullReferenceException();
-
-                certificados.Add(certificado);
-            }
+            // Recarrega todos os certificados do curso para manter o ZIP acumulado.
+            List<Certificado> certificados = await repositorioCertificado
+                .SelecionarPorCursoAsync(mensagem.IdCurso);
 
             //vincula os certificados ao Curso e atualiza o curso no banco
             curso.AddCertificados(certificados);
-            await repositorioCurso.EditarAsync(
-                curso.Id,
-                curso
-            );
+            await repositorioCurso.EditarAsync(curso.Id, curso);
 
-            // Somente certificados que realmente possuem PDF entram no ZIP
             var caminhosPdf = certificados
-                .Where(c =>
-                    c.Status == StatusGeracaoCertificado.GerandoCertificado &&
-                    c.CaminhoPdf is not null)
-                .Select(c => c.CaminhoPdf!)
+                .Where(c => c.CaminhoPdf is not null)
+                .Select(c => c.CaminhoPdf)
                 .ToList();
 
-            try
-            {
-                var caminhoZip = GerarZip(
-                    caminhosPdf,
-                    mensagem.IdCurso
+            if (caminhosPdf.Any(caminho => caminho is null))
+                throw new InvalidOperationException(
+                    "Não foi possível gerar o ZIP porque um certificado não possui PDF."
                 );
 
-                curso.AdicionarCaminhoDoZip(caminhoZip);
-                curso.AlterarParaDisponivel();
+            var caminhoZip = GerarZip(
+                caminhosPdf.Select(caminho => caminho!).ToList(),
+                curso.Nome
+            );
 
-                await repositorioCurso.EditarAsync(
-                    curso.Id,
-                    curso
-                );
-            }
-            catch (Exception)
-            {
-                curso.AlterarParaFalha();
+            curso.AdicionarCaminhoDoZip(caminhoZip);
+            curso.AlterarParaDisponivel();
 
-                await repositorioCurso.EditarAsync(
-                    curso.Id,
-                    curso
-                );
-            }
+            await repositorioCurso.EditarAsync(curso.Id, curso);
+        }
+        finally
+        {
+            // deixa o status do curso para uma nova solicitação em sucesso ou erro.
+            curso.AlterarParaDisponivel();
+            await repositorioCurso.EditarAsync(curso.Id, curso);
         }
     }
     private static string SalvarPdf(byte[] pdf, Guid idCertificado)
     {
-        string diretorio = Path.Combine("storage", "certificados");
+        string diretorio = Path.Combine(
+            "storage",
+            "certificados"
+            );
 
         Directory.CreateDirectory(diretorio);
 
@@ -141,7 +129,7 @@ public class SolicitarCertificadoComsumer
 
         return caminhoDoPdf;
     }
-    private static string GerarZip(List<string> caminhosPdf, Guid idCurso)
+    private static string GerarZip(List<string> caminhosPdf, string cursoNome)
     {
         var diretorio = Path.Combine(
             "storage",
@@ -152,7 +140,7 @@ public class SolicitarCertificadoComsumer
 
         var caminhoZip = Path.Combine(
             diretorio,
-            $"curso-{idCurso}.zip"
+            $"curso-{cursoNome}.zip"
         );
 
         using var arquivoZip = new FileStream(

@@ -33,6 +33,7 @@ public class Certificado : EntidadeBase<Certificado>
     public override void Atualizar(Certificado entidadeAtualizada)
     {
         Status = entidadeAtualizada.Status;
+        CaminhoPdf = entidadeAtualizada.CaminhoPdf;
     }
 
     public override IReadOnlyList<ErroValidacao> Validar()
