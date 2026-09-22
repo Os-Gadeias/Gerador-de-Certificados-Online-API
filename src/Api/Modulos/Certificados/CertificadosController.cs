@@ -55,4 +55,16 @@ public class CertificadosController(IMediator mediator) : ControllerBase
 
         return Ok(result.Value);
     }
+
+    [HttpGet("{cursoId:guid}/certificados")]
+    public async Task<ActionResult<SolicitarListaCertificadoResponse>> ListaCertificados(Guid cursoId)
+    {
+        var result = await mediator.Send(new
+            SelecionaCertificadoCursoPorIdQuery(cursoId));
+
+        if (result.IsFailed)
+            return this.ProblemDetails(result);
+
+        return Ok(result.Value);
+    }
 }

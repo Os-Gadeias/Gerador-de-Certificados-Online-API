@@ -8,7 +8,7 @@ public class Curso : EntidadeBase<Curso>, IEntidadeDeUsuario
     public int CargaHoraria { get; set; }
     public DateTime DataConclusao { get; set; } = DateTime.MinValue;
     public Guid UsuarioId { get; set; }
-    public List<Certificado> Certificados = [];
+    public List<Certificado> Certificados { get; set; }
     public StatusCurso Status { get; private set; } = StatusCurso.Disponivel;
     public string? CaminhoZip { get; set; }
     public Curso() { }

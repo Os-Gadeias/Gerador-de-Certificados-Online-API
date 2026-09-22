@@ -4,6 +4,7 @@ using GeradorCertificados.Infraestrutura.Compartilhado.Orm;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GeradorCertificados.Infraestrutura.Compartilhado.Orm.Migrations
 {
     [DbContext(typeof(GeradorCertificadosDbContext))]
-    partial class GeradorCertificadosDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260922044753_Corrijido_Curso")]
+    partial class Corrijido_Curso
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

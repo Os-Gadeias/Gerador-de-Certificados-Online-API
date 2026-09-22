@@ -4,6 +4,7 @@ using GeradorCertificados.Infraestrutura.Compartilhado.Orm;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GeradorCertificados.Infraestrutura.Compartilhado.Orm.Migrations
 {
     [DbContext(typeof(GeradorCertificadosDbContext))]
-    partial class GeradorCertificadosDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260922043509_Add_novasConfigs")]
+    partial class Add_novasConfigs
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -71,9 +74,6 @@ namespace GeradorCertificados.Infraestrutura.Compartilhado.Orm.Migrations
                     b.Property<Guid>("CursoId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("CursoId1")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("NomeAluno")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -86,8 +86,6 @@ namespace GeradorCertificados.Infraestrutura.Compartilhado.Orm.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CursoId");
-
-                    b.HasIndex("CursoId1");
 
                     b.ToTable("TBCertificado", (string)null);
                 });
@@ -297,10 +295,6 @@ namespace GeradorCertificados.Infraestrutura.Compartilhado.Orm.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Curso", null)
-                        .WithMany("Certificados")
-                        .HasForeignKey("CursoId1");
-
                     b.Navigation("Curso");
                 });
 
@@ -353,11 +347,6 @@ namespace GeradorCertificados.Infraestrutura.Compartilhado.Orm.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Curso", b =>
-                {
-                    b.Navigation("Certificados");
                 });
 #pragma warning restore 612, 618
         }
