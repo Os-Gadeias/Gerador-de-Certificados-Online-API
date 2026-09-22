@@ -1,0 +1,105 @@
+# 🎓 Gerador de Certificados Online
+
+O **Gerador de Certificados Online** é uma API RESTful desenvolvida em .NET que automatiza a criação, o processamento assíncrono e o envio de certificados de cursos. O sistema permite o cadastramento de alunos, a geração individual de certificados em PDF e a compactação em lote no formato ZIP para download fácil e rápido.
+
+---
+
+## 🛠️ Tecnologias Utilizadas
+
+* **Plataforma:** .NET 8 (C#)
+* **Framework Web:** ASP.NET Core Web API
+* **Arquitetura & Padrões:** CQRS com MediatR, Injeção de Dependência nativa e Clean Architecture / Camadas.
+* **Mensageria:** MassTransit com RabbitMQ / CloudAMQP
+* **Geração de PDF:** QuestPDF
+* **Autenticação:** JWT (JSON Web Tokens)
+* **Tratamento de Erros:** ProblemDetails (RFC 7807)
+* **Testes:** xUnit / NSubstitute / FluentAssertions
+
+---
+
+## 🚀 Funcionalidades Principais
+
+### 1. Módulo de Usuários e Autenticação
+* Cadastro de novos usuários por e-mail e senha.
+* Autenticação e emissão de tokens JWT.
+* Proteção de rotas via `Bearer Token`.
+* Validação de regras de complexidade de senha e unicidade de e-mail.
+
+### 2. Módulo de Cursos
+* Cadastro de cursos com nome, descrição opcional, carga horária e data de conclusão.
+* Consulta de detalhes do curso por ID.
+* Garantia de integridade para geração de certificados vinculados.
+
+### 3. Módulo de Geração de Certificados
+* Solicitação de geração em lote via lista de alunos.
+* Processamento assíncrono utilizando mensageria (RabbitMQ/CloudAMQP).
+* Geração de arquivos PDF individuais formatados com QuestPDF.
+* Compactação de todos os certificados em um único arquivo ZIP.
+* Acompanhamento do status do processamento (`Pendente`, `Gerando Certificados`, `Gerando Zip`, `Concluído`, `Falha`).
+
+---
+
+## 📋 Endpoints da API
+
+### 🔑 Autenticação (`/auth`) — *Público*
+
+| Método | Rota | Descrição | Status Sucesso |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/auth/cadastro` | Cadastra um novo usuário no sistema | `201 Created` |
+| `POST` | `/auth/login` | Autentica o usuário e retorna o token JWT | `200 OK` |
+
+### 📚 Cursos (`/cursos`) — *Protegido (Bearer Token)*
+
+| Método | Rota | Descrição | Status Sucesso |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/cursos` | Cadastra um novo curso | `201 Created` |
+| `GET` | `/cursos/{cursoId}` | Consulta os detalhes de um curso existente | `200 OK` |
+
+### 📜 Certificados (`/cursos/{cursoId}`) — *Protegido (Bearer Token)*
+
+| Método | Rota | Descrição | Status Sucesso |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/cursos/{cursoId}/certificados` | Solicita a geração de certificados em lote | `202 Accepted` |
+| `GET` | `/cursos/{cursoId}/status` | Consulta o status do processamento em lote | `200 OK` |
+| `GET` | `/cursos/{cursoId}/certificados` | Lista todos os certificados gerados para o curso | `200 OK` |
+| `GET` | `/cursos/{cursoId}/certificados/download` | Baixa o arquivo ZIP contendo os PDFs | `200 OK` (`application/zip`) |
+
+---
+
+## ⚙️ Regras de Negócio Importantes
+
+* **Usuários:**
+  * O e-mail deve ser válido e único.
+  * A senha deve conter no mínimo **8 caracteres**, pelo menos **um dígito** e **um caractere não alfanumérico**.
+  * Chaves de assinatura JWT e credenciais nunca ficam expostas no código-fonte (`appsettings.json` / Variáveis de Ambiente).
+
+* **Cursos:**
+  * Nome do curso: obrigatório (máx. 200 caracteres).
+  * Descrição: opcional (máx. 500 caracteres).
+  * Carga horária: inteiro estritamente maior que zero.
+  * Data de conclusão: obrigatória.
+
+* **Certificados:**
+  * A solicitação precisa conter ao menos 1 aluno (nome obrigatório, máx. 200 caracteres).
+  * Um curso com processamento em andamento não pode receber uma nova solicitação (`409 Conflict`).
+
+---
+
+## 🏗️ Arquitetura e Padrões de Projeto
+
+O projeto adota uma separação rigorosa de responsabilidades:
+
+* **API / Controllers:** Servem puramente como interface externa de comunicação. Recebem/retornam *Data Transfer Objects* (`record`) e utilizam `ProblemDetails` para tratamento padronizado de falhas.
+* **Application (CQRS / MediatR):** Contém os comandos (`Commands`), consultas (`Queries`) e seus respectivos manipuladores (`Handlers`).
+* **Domain:** Entidades bem encapsuladas e ricas com validação do estado do negócio.
+* **Infrastructure:** Repositórios de persistência, integrações com MassTransit/RabbitMQ para mensageria assíncrona e serviços de geração de arquivos PDF.
+
+---
+
+## 🔧 Configuração e Execução
+
+### Pré-requisitos
+
+* [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
+* [RabbitMQ](https://www.rabbitmq.com/) (ou conta no [CloudAMQP](https://www.cloudamqp.com/))
+* Banco de Dados (SQL Server, PostgreSQL ou SQLite conforme ambiente)
