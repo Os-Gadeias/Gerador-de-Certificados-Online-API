@@ -28,10 +28,13 @@ public class SolicitaGeracaoCertificadoCommandHandler(
     public async Task<Result<SolicitarGeracaoResponse>> Handle(SolicitarGeracaoCommand command, CancellationToken cancellationToken = default)
     {
         Curso? cursoSelecionado = await repositorioCurso.SelecionarPorIdAsync(command.IdCurso);
-
+        
         //verificar se o curso existe
         if (cursoSelecionado is null)
             return Result.Fail(ErrosCurso.ErroNaoEncontrado("Curso não encontrado!"));
+
+        if(cursoSelecionado.Status == StatusCurso.GerandoCertificados)
+            return Result.Fail(ErrosCurso.Conflito("O curso selecionado já está gerando certificados!"));
 
         //Verifica se os nomes são validos
         foreach (string nome in command.NomesAlunos)

@@ -8,15 +8,15 @@ public class Curso : EntidadeBase<Curso>, IEntidadeDeUsuario
     public int CargaHoraria { get; set; }
     public DateTime DataConclusao { get; set; } = DateTime.MinValue;
     public Guid UsuarioId { get; set; }
-    public List<Certificado> Certificados { get; set; }
+    public List<Certificado>? Certificados { get; set; }
     public StatusCurso Status { get; private set; } = StatusCurso.Disponivel;
     public string? CaminhoZip { get; set; }
     public Curso() { }
 
-    public Curso(string nome, string? descrocao, int cargaHoraria, DateTime dataConclusao)
+    public Curso(string nome, string? descricao, int cargaHoraria, DateTime dataConclusao)
     {
         Nome = nome;
-        Descricao = descrocao;
+        Descricao = descricao;
         CargaHoraria = cargaHoraria;
         DataConclusao = dataConclusao;
     }

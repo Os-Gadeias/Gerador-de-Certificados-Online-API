@@ -22,4 +22,10 @@ public static class ErrosCurso
         return new Error(menssagem)
         .WithMetadata(nameof(TipoErro), TipoErro.Validacao);
     }
+
+    internal static IError Conflito(string mensagem)
+    {
+        return new Error(mensagem)
+            .WithMetadata(nameof(TipoErro), TipoErro.Conflito);
+    }
 }
