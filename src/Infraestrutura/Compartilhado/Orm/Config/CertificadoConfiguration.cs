@@ -30,8 +30,9 @@ public class CertificadoConfiguration : IEntityTypeConfiguration<Certificado>
 
 
         builder.HasOne(c => c.Curso)
-            .WithMany()
+            .WithMany(c => c.Certificados)
             .IsRequired()
+            .HasForeignKey("CursoId")
             .OnDelete(DeleteBehavior.Restrict);
     }
 

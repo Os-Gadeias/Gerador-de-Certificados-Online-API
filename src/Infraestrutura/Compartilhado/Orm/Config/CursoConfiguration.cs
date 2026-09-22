@@ -30,5 +30,6 @@ public class CursoConfiguration : IEntityTypeConfiguration<Curso>
         builder.Property(c => c.Status)
             .IsRequired()
             .HasConversion<string>();
+
     }
 }

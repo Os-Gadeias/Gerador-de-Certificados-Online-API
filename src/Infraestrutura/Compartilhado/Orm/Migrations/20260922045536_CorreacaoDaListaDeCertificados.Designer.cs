@@ -4,6 +4,7 @@ using GeradorCertificados.Infraestrutura.Compartilhado.Orm;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GeradorCertificados.Infraestrutura.Compartilhado.Orm.Migrations
 {
     [DbContext(typeof(GeradorCertificadosDbContext))]
-    partial class GeradorCertificadosDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260922045536_CorreacaoDaListaDeCertificados")]
+    partial class CorreacaoDaListaDeCertificados
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -71,6 +74,9 @@ namespace GeradorCertificados.Infraestrutura.Compartilhado.Orm.Migrations
                     b.Property<Guid>("CursoId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("CursoId1")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("NomeAluno")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -83,6 +89,8 @@ namespace GeradorCertificados.Infraestrutura.Compartilhado.Orm.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CursoId");
+
+                    b.HasIndex("CursoId1");
 
                     b.ToTable("TBCertificado", (string)null);
                 });
@@ -287,10 +295,14 @@ namespace GeradorCertificados.Infraestrutura.Compartilhado.Orm.Migrations
             modelBuilder.Entity("GeradorCertificados.Dominio.Modulos.ModuloCertificado.Certificado", b =>
                 {
                     b.HasOne("Curso", "Curso")
-                        .WithMany("Certificados")
+                        .WithMany()
                         .HasForeignKey("CursoId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("Curso", null)
+                        .WithMany("Certificados")
+                        .HasForeignKey("CursoId1");
 
                     b.Navigation("Curso");
                 });
