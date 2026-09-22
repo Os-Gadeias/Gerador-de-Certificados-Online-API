@@ -26,6 +26,10 @@ public class Curso : EntidadeBase<Curso>, IEntidadeDeUsuario
         Status = entidadeAtualizada.Status;
         CaminhoZip = entidadeAtualizada.CaminhoZip;
     }
+    public void AddCertificados(List<Certificado> certificados)
+    {
+        Certificados = certificados;
+    }
 
     public void AlterarParaGerandoCertificados()
     {

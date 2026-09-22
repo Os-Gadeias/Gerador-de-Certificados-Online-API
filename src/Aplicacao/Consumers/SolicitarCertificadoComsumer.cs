@@ -86,6 +86,13 @@ public class SolicitarCertificadoComsumer
                 certificados.Add(certificado);
             }
 
+            //vincula os certificados ao Curso e atualiza o curso no banco
+            curso.AddCertificados(certificados);
+            await repositorioCurso.EditarAsync(
+                curso.Id,
+                curso
+            );
+
             // Somente certificados que realmente possuem PDF entram no ZIP
             var caminhosPdf = certificados
                 .Where(c =>
