@@ -1,4 +1,5 @@
 using FluentResults;
+using GeradorCertificados.Aplicacao.Compartilhado;
 using GeradorCertificados.Aplicacao.Modulos.Certificados.DTOs;
 using GeradorCertificados.Aplicacao.Modulos.Cursos.Util;
 using GeradorCertificados.Dominio.Compartilhado;
@@ -22,6 +23,9 @@ public class SolicitaListaCertificadosHandler(IRepositorioCurso repositorioCurso
                 $"O \"Curso\" com o Id {request.Id} não foi encontrado"
             ));
         }
+
+        if (curso.Certificados is null)
+            return Result.Fail(ErrosCurso.Conflito("Curso não possui certificados atrelados!"));
 
         return new SolicitarListaCertificadoResponse(curso.Certificados.Select(c => new ListarCertificadoDto(
             c.NomeAluno,

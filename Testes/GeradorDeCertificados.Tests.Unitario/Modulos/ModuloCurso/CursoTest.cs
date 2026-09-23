@@ -1,5 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+namespace GeradorDeCertificados.Tests.Unitario.Modulos.ModuloCurso;
+
 [TestClass]
 public class CursoTest
 {
