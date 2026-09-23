@@ -3,6 +3,8 @@ using GeradorCertificados.Aplicacao.Modulos.Cursos;
 using GeradorCertificados.Dominio.Modulos.ModuloCurso;
 using Moq;
 
+namespace GeradorDeCertificados.Tests.Unitario.Modulos.ModuloCurso;
+
 [TestClass]
 public class SelecionarCursoPorIdQuery
 {
