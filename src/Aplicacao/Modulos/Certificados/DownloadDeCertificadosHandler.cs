@@ -34,8 +34,8 @@ public class DownloadDeCertificadosHandler(
         var bytes = await File.ReadAllBytesAsync(cursoSelecionado.CaminhoZip);
 
         return Result.Ok(new DownloadCertificadosResponse(
-            Arquivo: bytes,
-            NomeArquivo: $"certificados-{cursoSelecionado.Id}.zip"
+            bytes,
+            $"certificados-{cursoSelecionado.Id}.zip"
         ));
 
     }
