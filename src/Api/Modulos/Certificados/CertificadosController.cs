@@ -10,6 +10,9 @@ namespace GeradorCertificados.WebApi.Modulos.Certificados;
 [Route("api/cursos")]
 public class CertificadosController(IMediator mediator) : ControllerBase
 {
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
     [HttpPost("{cursoId:guid}")]
     public async Task<ActionResult<SolicitarGeracaoDeCertificadosResponse>> SolicitarGeracaoCertificados
         (Guid cursoId, SolicitarGeracaoDeCertificadosCommand command)
@@ -26,6 +29,8 @@ public class CertificadosController(IMediator mediator) : ControllerBase
         );
     }
 
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [HttpGet("{cursoId:guid}/download")]
     public async Task<ActionResult> DownloadCertificados(Guid cursoId)
     {
@@ -43,6 +48,8 @@ public class CertificadosController(IMediator mediator) : ControllerBase
         );
     }
 
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [HttpGet("{cursoId:guid}/status")]
     public async Task<ActionResult<SelecionarCursoResponse>> ConsultaProcessamento(Guid cursoId)
     {
@@ -56,6 +63,8 @@ public class CertificadosController(IMediator mediator) : ControllerBase
         return Ok(result.Value);
     }
 
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [HttpGet("{cursoId:guid}/certificados")]
     public async Task<ActionResult<SolicitarListaCertificadoResponse>> ListaCertificados(Guid cursoId)
     {
