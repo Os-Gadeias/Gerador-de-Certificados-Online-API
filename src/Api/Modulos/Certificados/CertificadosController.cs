@@ -13,6 +13,7 @@ public class CertificadosController(IMediator mediator) : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
+    [ProducesResponseType<SolicitarGeracaoDeCertificadosResponse>(StatusCodes.Status200OK)]
     [HttpPost("{cursoId:guid}")]
     public async Task<ActionResult<SolicitarGeracaoDeCertificadosResponse>> SolicitarGeracaoCertificados
         (Guid cursoId, SolicitarGeracaoDeCertificadosCommand command)
@@ -31,6 +32,7 @@ public class CertificadosController(IMediator mediator) : ControllerBase
 
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType<SolicitarDownloadDeCertificadosCommand>(StatusCodes.Status200OK)]
     [HttpGet("{cursoId:guid}/download")]
     public async Task<ActionResult> DownloadCertificados(Guid cursoId)
     {
@@ -50,6 +52,7 @@ public class CertificadosController(IMediator mediator) : ControllerBase
 
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType<SelecionarCursoResponse>(StatusCodes.Status200OK)]
     [HttpGet("{cursoId:guid}/status")]
     public async Task<ActionResult<SelecionarCursoResponse>> ConsultaProcessamento(Guid cursoId)
     {
@@ -65,6 +68,7 @@ public class CertificadosController(IMediator mediator) : ControllerBase
 
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType<SolicitarListaCertificadoResponse>(StatusCodes.Status200OK)]
     [HttpGet("{cursoId:guid}/certificados")]
     public async Task<ActionResult<SolicitarListaCertificadoResponse>> ListaCertificados(Guid cursoId)
     {

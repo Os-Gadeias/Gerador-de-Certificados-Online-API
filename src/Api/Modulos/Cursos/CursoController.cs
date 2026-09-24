@@ -13,8 +13,8 @@ public class CursoController(IMediator mediator) : ControllerBase
 {
     [HttpPost]
     [ProducesResponseType<CadastrarCursoResponce>(StatusCodes.Status201Created)]
-    [ProducesResponseType<CadastrarCursoResponce>(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType<CadastrarCursoResponce>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
 
     public async Task<ActionResult<CadastrarCursoResponce>> CadastrarCurso(CadastrarCursoRequest request)
     {
@@ -37,8 +37,8 @@ public class CursoController(IMediator mediator) : ControllerBase
     }
 
     [ProducesResponseType<CadastrarCursoResponce>(StatusCodes.Status200OK)]
-    [ProducesResponseType<CadastrarCursoResponce>(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType<CadastrarCursoResponce>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
 
     [HttpGet("{id:guid}")]
     public async Task<ActionResult<CursoDto>> SelecionarPorId(Guid id)
