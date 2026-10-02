@@ -1,0 +1,26 @@
+/* You can add global styles to this file, and also import other style files */
+
+$primaria: #6b2cbb;
+$secundaria: #f2e6f6;
+
+$roxo-escuro: #2a1941;
+$roxo: #6a52cf;
+
+$magenta: #eb6af9;
+
+$preto: #000000;
+$preto-suave: #100f1a;
+
+$cinza: #6968a1;
+$branco: #ffffff;
+
+@use 'bootstrap/scss/bootstrap' with (
+  $primary: $primaria,
+  $secondary: $secundaria,
+  $success: #00ff66,
+  $info: $roxo,
+  $warning: $magenta,
+  $danger: $magenta,
+  $light: $secundaria,
+  $dark: $preto
+);
