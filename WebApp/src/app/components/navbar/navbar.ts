@@ -13,6 +13,7 @@ interface NavBarComponent {
 })
 export class Navbar {
   public readonly itens: NavBarComponent[] = [
+    { titulo: 'Home', url: '#Home', icone: 'bi-house-door-fill' },
     { titulo: 'Courses', url: '#Cursos', icone: 'bi-backpack' },
     { titulo: 'Certificate', url: '#Certificados', icone: 'bi-patch-check' },
   ];

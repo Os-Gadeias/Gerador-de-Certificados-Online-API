@@ -25,3 +25,8 @@ $branco: #ffffff;
   $dark: $preto
 );
 @use 'bootstrap-icons';
+
+section {
+  display: flex;
+  min-height: 100vh;
+}
