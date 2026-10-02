@@ -30,3 +30,10 @@ section {
   display: flex;
   min-height: 100vh;
 }
+
+.bg-lighterDark {
+  background-color: $preto-suave;
+}
+* {
+  color: $secundaria;
+}
