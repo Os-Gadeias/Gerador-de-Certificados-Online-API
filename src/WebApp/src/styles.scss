@@ -54,3 +54,21 @@ section {
       0 0 80px rgba($roxo, 0.18);
   }
 }
+
+.form-group input {
+  background-color: $roxo-escuro;
+  color: $secundaria;
+  font-weight: 400;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+.form-group input:focus {
+  background-color: $roxo-escuro;
+  color: $branco;
+}
+.form-group input::placeholder {
+  color: $branco;
+}
+.formularioInput {
+  max-width: 550px;
+}
