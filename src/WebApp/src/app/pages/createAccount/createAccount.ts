@@ -2,10 +2,42 @@ import { Component } from '@angular/core';
 import { Footer } from '../../components/footer/footer';
 import { RouterLink } from '@angular/router';
 
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ServiceCreateUser } from '../../services/createUser/serviceCreateUser';
+
 @Component({
   selector: 'app-createAccount',
   standalone: true,
-  imports: [Footer, RouterLink],
+  imports: [Footer, RouterLink, ReactiveFormsModule],
   templateUrl: './createAccount.html',
 })
-export class createAccount {}
+export class createAccount {
+  public formulario!: FormGroup;
+
+  constructor(
+    private createUser: FormBuilder,
+    private serviceCreateUser: ServiceCreateUser,
+  ) {
+    this.formulario = createUser.group({
+      email: ['', Validators.required],
+      senha: ['', Validators.required],
+    });
+  }
+  sendCreateUser(): void {
+    if (this.formulario.invalid) return;
+
+    const dados = this.formulario.value;
+
+    this.serviceCreateUser.enviarMensagem(dados).subscribe({
+      next: () => {
+        console.log('send to the API');
+        return;
+      },
+
+      error: (erro) => {
+        console.error("error couldn't access the api!");
+        return;
+      },
+    });
+  }
+}

@@ -18,8 +18,8 @@ export class Login {
     private loginService: serviceLogin,
   ) {
     this.formularioLogin = this.login.group({
-      Email: ['', Validators.required],
-      Password: ['', Validators.required],
+      email: ['', Validators.required],
+      senha: ['', Validators.required],
     });
   }
   sendUserLogin(): void {

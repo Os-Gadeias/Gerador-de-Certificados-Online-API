@@ -2,8 +2,8 @@
   <div class="container d-flex align-items-center justify-content-center">
     <form
       class="container formularioInput certificado border border-info p-4 rounded d-flex flex-column gap-4"
-      action=""
-      method="post"
+      [formGroup]="formulario"
+      (ngSubmit)="sendCreateUser()"
     >
       <div class="d-flex flex-column align-items-center">
         <h3 class="text-center display-6 m-0">Create Your Account!</h3>
@@ -17,11 +17,18 @@
           id="email"
           aria-describedby="emailHelp"
           placeholder="Enter email"
+          formControlName="email"
         />
       </div>
       <div class="form-group">
         <label for="password">Password</label>
-        <input type="password" class="form-control" id="password" placeholder="Password" />
+        <input
+          type="password"
+          class="form-control"
+          id="password"
+          placeholder="Password"
+          formControlName="senha"
+        />
       </div>
       <button type="submit" class="btn btn-primary">Submit</button>
       <span>Already have a Account? <a href="" routerLink="/login">Login Here!</a></span>
