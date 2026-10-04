@@ -46,6 +46,7 @@ builder.Services.AddCors(options =>
         });
     });
 
+
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
@@ -105,6 +106,9 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 var app = builder.Build();
+
+app.UseCors("Angular");
+
 
 if (app.Environment.IsDevelopment())
 {

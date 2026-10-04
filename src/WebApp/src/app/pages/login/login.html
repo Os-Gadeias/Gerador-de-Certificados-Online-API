@@ -2,8 +2,8 @@
   <div class="container d-flex align-items-center justify-content-center">
     <form
       class="container formularioInput certificado border border-info p-4 rounded d-flex flex-column gap-4"
-      action=""
-      method="post"
+      [formGroup]="formularioLogin"
+      (ngSubmit)="sendUserLogin()"
     >
       <div class="d-flex flex-column align-items-center">
         <h3 class="text-center display-6 m-0">Welcome Back!</h3>
@@ -17,6 +17,7 @@
           id="email"
           aria-describedby="emailHelp"
           placeholder="Enter email"
+          formControlName="Email"
         />
         <small id="emailHelp" class="form-text text-light"
           >We'll never share your email with anyone else.</small
@@ -29,6 +30,7 @@
           class="form-control"
           id="exampleInputPassword1"
           placeholder="Password"
+          formControlName="Password"
         />
       </div>
       <button type="submit" class="btn btn-primary">Submit</button>
