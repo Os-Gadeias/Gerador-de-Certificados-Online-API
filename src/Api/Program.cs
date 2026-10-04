@@ -35,6 +35,17 @@ builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddJwtAuthServices();
 builder.Services.AddSerilogServices(builder.Logging);
 
+builder.Services.AddCors(options =>
+    {
+        options.AddPolicy("Angular", policy =>
+        {
+           policy
+                .WithOrigins("http://localhost:4200") 
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+        });
+    });
+
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
