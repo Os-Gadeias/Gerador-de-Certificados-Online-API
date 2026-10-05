@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { Footer } from '../../components/footer/footer';
 import { RouterLink } from '@angular/router';
 
@@ -13,12 +13,13 @@ import { ApiError } from '../../services/apiError/apiError';
   templateUrl: './createAccount.html',
 })
 export class createAccount {
-  public mensagemErro!: string;
+  mensagemErro!: string;
 
   public formulario!: FormGroup;
   constructor(
     private createUser: FormBuilder,
     private serviceCreateUser: ServiceCreateUser,
+    private changeDetector: ChangeDetectorRef,
   ) {
     this.formulario = createUser.group({
       email: ['', Validators.required],
@@ -45,6 +46,7 @@ export class createAccount {
         const mensagem = Object.values(apiError.errors)[0][0];
 
         this.mensagemErro = mensagem;
+        this.changeDetector.markForCheck();
       },
     });
   }
