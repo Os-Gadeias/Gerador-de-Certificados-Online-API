@@ -30,6 +30,11 @@
           formControlName="senha"
         />
       </div>
+      @if (mensagemErro) {
+        <div>
+          <p class="text-danger">{{ mensagemErro }}</p>
+        </div>
+      }
       <button type="submit" class="btn btn-primary">Submit</button>
       <span>Already have a Account? <a href="" routerLink="/login">Login Here!</a></span>
     </form>

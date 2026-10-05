@@ -4,7 +4,8 @@ import { RouterLink } from '@angular/router';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ServiceCreateUser } from '../../services/createUser/serviceCreateUser';
-
+import { HttpErrorResponse } from '@angular/common/http';
+import { ApiError } from '../../services/apiError/apiError';
 @Component({
   selector: 'app-createAccount',
   standalone: true,
@@ -12,8 +13,9 @@ import { ServiceCreateUser } from '../../services/createUser/serviceCreateUser';
   templateUrl: './createAccount.html',
 })
 export class createAccount {
-  public formulario!: FormGroup;
+  public mensagemErro!: string;
 
+  public formulario!: FormGroup;
   constructor(
     private createUser: FormBuilder,
     private serviceCreateUser: ServiceCreateUser,
@@ -24,19 +26,25 @@ export class createAccount {
     });
   }
   sendCreateUser(): void {
-    if (this.formulario.invalid) return;
-
+    if (this.formulario.invalid) {
+      return;
+    }
     const dados = this.formulario.value;
 
     this.serviceCreateUser.enviarMensagem(dados).subscribe({
-      next: () => {
-        console.log('send to the API');
-        return;
+      next: (resposta) => {
+        console.log('Usuário criado!');
+        console.log(resposta.usuarioId);
+
+        this.mensagemErro = '';
       },
 
-      error: (erro) => {
-        console.error("error couldn't access the api!");
-        return;
+      error: (erro: HttpErrorResponse) => {
+        const apiError = erro.error as ApiError;
+
+        const mensagem = Object.values(apiError.errors)[0][0];
+
+        this.mensagemErro = mensagem;
       },
     });
   }
