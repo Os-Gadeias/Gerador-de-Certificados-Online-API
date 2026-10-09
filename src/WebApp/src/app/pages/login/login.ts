@@ -38,7 +38,7 @@ export class Login {
       //o subscribe diz que quando a api responder ele vai fazer algo
       next: (resposta) => {
         //o next é quando o resultado da api é bem sucedido, ele tem um atributo reposta que é tipado pelo retorno da funcao enviar msg
-        localStorage.setItem('token', resposta.token);
+        localStorage.setItem('token', resposta.accessToken);
 
         this.router.navigate(['/']);
         return;

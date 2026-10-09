@@ -13,6 +13,6 @@ export class serviceLogin {
 
   //funcao enviarMensagem recebe uma variavel de dados do tipo loginRequest (record) : ela é uma função Observable<void> = async
   enviarMensagem(dados: loginRequest): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>('https://localhost:7094/api/auth/login', dados); //o obj http abre a apiUrl no method post e envia os dados da interface
+    return this.http.post<LoginResponse>(this.apiUrl, dados); //o obj http abre a apiUrl no method post e envia os dados da interface
   }
 }

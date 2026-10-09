@@ -4,6 +4,6 @@ export interface loginRequest {
 }
 export interface LoginResponse {
   clienteId: string;
-  token: string;
-  DataExpiracaoEmUtc: string;
+  accessToken: string;
+  dataExpiracaoEmUtc: string;
 }
