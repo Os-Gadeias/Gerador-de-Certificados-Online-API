@@ -1,12 +1,13 @@
 using GeradorCertificados.Dominio.Modulos.ModuloCertificado;
+using GeradorCertificados.Dominio.Modulos.Pdf;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 
-namespace GeradorCertificados.Aplicacao.PdfGeneretor;
+namespace GeradorCertificados.Infraestrutura.PdfGeneretor;
 
-public static class GerarPdf
+public class GerarPdf : IGerarPdf
 {
-    public static byte[] Gerar(Certificado certificado)
+    public byte[] Gerar(Certificado certificado)
     {
         var document = Document.Create(container =>
         {

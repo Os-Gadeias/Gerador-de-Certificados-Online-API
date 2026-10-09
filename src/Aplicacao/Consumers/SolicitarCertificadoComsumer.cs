@@ -1,7 +1,7 @@
-using GeradorCertificados.Aplicacao.PdfGeneretor;
 using GeradorCertificados.Dominio.Compartilhado.Auth;
 using GeradorCertificados.Dominio.Modulos.ModuloCertificado;
 using GeradorCertificados.Dominio.Modulos.ModuloCurso;
+using GeradorCertificados.Dominio.Modulos.Pdf;
 using MassTransit;
 
 namespace GeradorCertificados.Aplicacao.Consumers;
@@ -10,7 +10,8 @@ public class SolicitarCertificadoComsumer
     (
         IRepositorioCertificado repositorioCertificado,
         IRepositorioCurso repositorioCurso,
-        IProvedorDeUsuario provedorDeUsuario
+        IProvedorDeUsuario provedorDeUsuario,
+        IGerarPdf gerarPdf
     ) : IConsumer<SolicitarCertificadosMessages>
 {
     public async Task Consume(
@@ -51,7 +52,7 @@ public class SolicitarCertificadoComsumer
                 );
                 try
                 {
-                    var pdfCertificado = GerarPdf.Gerar(certificadoSelecionado);
+                    var pdfCertificado = gerarPdf.Gerar(certificadoSelecionado);
 
                     var caminhoPdf = GeradorDeZip.SalvarPdf(
                     pdfCertificado,

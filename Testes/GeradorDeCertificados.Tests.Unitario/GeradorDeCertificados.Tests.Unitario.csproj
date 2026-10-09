@@ -17,5 +17,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Dominio\GeradorCertificados.Dominio.csproj" />
     <ProjectReference Include="..\..\src\Aplicacao\GeradorCertificados.Aplicacao.csproj" />
+    <ProjectReference Include="..\..\src\Infraestrutura\GeradorCertificados.Infraestrutura.csproj" />
   </ItemGroup>
 </Project>

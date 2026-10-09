@@ -2,10 +2,12 @@ using GeradorCertificados.Dominio.Compartilhado;
 using GeradorCertificados.Dominio.Compartilhado.Auth;
 using GeradorCertificados.Dominio.Modulos.ModuloCertificado;
 using GeradorCertificados.Dominio.Modulos.ModuloCurso;
+using GeradorCertificados.Dominio.Modulos.Pdf;
 using GeradorCertificados.Infraestrutura.Compartilhado.Auth;
 using GeradorCertificados.Infraestrutura.Compartilhado.Orm;
 using GeradorCertificados.Infraestrutura.Modulos.Certificados;
 using GeradorCertificados.Infraestrutura.Modulos.Cursos;
+using GeradorCertificados.Infraestrutura.PdfGeneretor;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -24,6 +26,7 @@ public static class DependencyInjection
         services.AddScoped<IGerenciadorDeIdentidade, GerenciadorDeIdentidade>();
         services.AddScoped<IRepositorioCurso, RepositorioCursoEmOrm>();
         services.AddScoped<IRepositorioCertificado, RepositorioCertificadoEmOrm>();
+        services.AddScoped<IGerarPdf, GerarPdf>();
 
         services.AddDataProtection();
         services.AddIdentityCore<IdentityUser<Guid>>(options =>
