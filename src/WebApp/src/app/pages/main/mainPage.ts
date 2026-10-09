@@ -8,7 +8,7 @@ import { Card } from '../../components/card/card';
 @Component({
   selector: 'app-main-page',
   standalone: true,
-  imports: [Navbar, Home, Footer, Card],
+  imports: [Navbar, Home, Footer, Card, Courses],
   templateUrl: './mainPage.html',
 })
 export class MainPage {}
