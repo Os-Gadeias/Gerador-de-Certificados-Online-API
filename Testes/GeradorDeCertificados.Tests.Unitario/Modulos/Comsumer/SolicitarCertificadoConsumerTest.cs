@@ -2,6 +2,7 @@ using GeradorCertificados.Aplicacao.Consumers;
 using GeradorCertificados.Dominio.Compartilhado.Auth;
 using GeradorCertificados.Dominio.Modulos.ModuloCertificado;
 using GeradorCertificados.Dominio.Modulos.ModuloCurso;
+using GeradorCertificados.Dominio.Modulos.Pdf;
 using MassTransit;
 using Moq;
 using QuestPDF.Infrastructure;
@@ -43,11 +44,14 @@ public class SolicitarCertificadoConsumerTest
             r.SelecionarPorCursoAsync(curso.Id)).ReturnsAsync([certificado]);
 
         Mock<IProvedorDeUsuario> provedorDeUsuario = new();
+        Mock<IGerarPdf> gerarPdf = new();
+        gerarPdf.Setup(g => g.Gerar(certificado)).Returns([1, 2, 3]);
 
         SolicitarCertificadoComsumer consumer = new(
             repositorioCertificado.Object,
             repositorioCurso.Object,
-            provedorDeUsuario.Object
+            provedorDeUsuario.Object,
+            gerarPdf.Object
         );
 
         var mensagem = new SolicitarCertificadosMessages(
@@ -76,6 +80,7 @@ public class SolicitarCertificadoConsumerTest
         Mock<IRepositorioCertificado> repositorioCertificado = new();
 
         Mock<IProvedorDeUsuario> provedorDeUsuario = new();
+        Mock<IGerarPdf> gerarPdf = new();
 
         var mensagem = new SolicitarCertificadosMessages(
             idCurso,
@@ -99,7 +104,8 @@ public class SolicitarCertificadoConsumerTest
         var consumer = new SolicitarCertificadoComsumer(
             repositorioCertificado.Object,
             repositorioCurso.Object,
-            provedorDeUsuario.Object
+            provedorDeUsuario.Object,
+            gerarPdf.Object
         );
 
         try
@@ -133,6 +139,7 @@ public class SolicitarCertificadoConsumerTest
         Mock<IRepositorioCertificado> repositorioCertificado = new();
 
         Mock<IProvedorDeUsuario> provedorDeUsuario = new();
+        Mock<IGerarPdf> gerarPdf = new();
 
         var mensagem = new SolicitarCertificadosMessages(
             curso.Id,
@@ -160,7 +167,8 @@ public class SolicitarCertificadoConsumerTest
         var consumer = new SolicitarCertificadoComsumer(
             repositorioCertificado.Object,
             repositorioCurso.Object,
-            provedorDeUsuario.Object
+            provedorDeUsuario.Object,
+            gerarPdf.Object
         );
 
         try
