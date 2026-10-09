@@ -55,14 +55,16 @@ section {
   }
 }
 
-.form-group input {
+.form-group input,
+.form-group textarea {
   background-color: $roxo-escuro;
   color: $secundaria;
   font-weight: 400;
   margin-top: 5px;
   margin-bottom: 5px;
 }
-.form-group input:focus {
+.form-group input:focus,
+.form-group textarea:focus {
   background-color: $roxo-escuro;
   color: $branco;
 }

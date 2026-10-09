@@ -16,4 +16,12 @@ export const routes: Routes = [
     path: 'createAccountPage',
     loadComponent: () => import('./pages/createAccount/createAccount').then((c) => c.createAccount),
   },
+  {
+    path: 'createCourse',
+    redirectTo: 'createCoursePage',
+  },
+  {
+    path: 'createCoursePage',
+    loadComponent: () => import('./pages/create-course/create-course').then((c) => c.CreateCourse),
+  },
 ];

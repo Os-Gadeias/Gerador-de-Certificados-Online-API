@@ -3,7 +3,7 @@ import { RouterLink } from '@angular/router';
 
 @Component({
   imports: [RouterLink],
-  selector: 'app-courses',
-  templateUrl: './courses.html',
+  selector: 'app-create-course',
+  templateUrl: './create-course.html',
 })
-export class Courses {}
+export class CreateCourse {}

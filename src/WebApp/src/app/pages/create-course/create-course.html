@@ -1,0 +1,96 @@
+<section class="smallSection">
+  <div class="container d-flex align-items-center justify-content-center">
+    <div
+      class="formularioInput p-4 p-md-5 rounded-4 shadow-lg bg-dark text-light border border-primary border-opacity-50 position-relative"
+    >
+      <!-- Ilustração / Ícone no canto superior direito -->
+      <div class="position-absolute top-0 end-0 mt-4 me-4 d-none d-sm-block">
+        <i class="bi bi-diagram-3-fill text-primary opacity-50 fs-1"></i>
+      </div>
+
+      <!-- Cabeçalho -->
+      <div class="mb-4 text-start">
+        <h2 class="fw-bold text-light mb-1">Register New Course</h2>
+        <p class="text-secondary small">
+          Streamline your course and certificate creation process. 🧾
+        </p>
+      </div>
+
+      <!-- Formulário -->
+      <form>
+        <!-- Course Name -->
+        <div class="form-group mb-3">
+          <label for="courseName" class="form-label text-light fw-medium mb-1">Course Name</label>
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control rounded-3 border border-primary border-opacity-50 ps-2"
+              id="courseName"
+              placeholder=""
+              required
+            />
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div class="form-group mb-3">
+          <label for="description" class="form-label text-light fw-medium mb-1">Description</label>
+          <textarea class="form-control rounded-3 border-0" id="description" rows="3"></textarea>
+        </div>
+
+        <!-- Row: Course Hours & Completion Date -->
+        <div class="row g-3 mb-4">
+          <!-- Course Hours -->
+          <div class="col-6 form-group">
+            <label for="courseHours" class="form-label text-light fw-medium mb-1"
+              >Course Hours</label
+            >
+            <div class="input-group">
+              <input
+                type="number"
+                class="form-control rounded-3 border border-primary border-opacity-50 ps-3"
+                id="courseHours"
+                value="1"
+                min="1"
+                required
+              />
+            </div>
+          </div>
+
+          <!-- Completion Date -->
+          <div class="col-6 form-group">
+            <label for="completionDate" class="form-label text-light fw-medium mb-1"
+              >Completion Date</label
+            >
+            <div class="input-group">
+              <input
+                type="date"
+                class="form-control rounded-3 border-0 ps-3 text-secondary"
+                id="completionDate"
+                placeholder="dd/mm/aaaa"
+                required
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Botões -->
+        <div class="row g-2 pt-2">
+          <div class="col-6">
+            <a
+              routerLink="../main"
+              class="btn btn-outline-secondary w-100 rounded-3 py-2 text-light fw-medium"
+            >
+              Cancel
+            </a>
+          </div>
+          <div class="col-6">
+            <button type="submit" class="btn btn-primary w-100 rounded-3 py-2 text-white fw-bold">
+              Register Course
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
