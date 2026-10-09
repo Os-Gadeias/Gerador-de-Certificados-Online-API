@@ -28,14 +28,16 @@ export class Login {
   }
   sendUserLogin(): void {
     if (this.formularioLogin.invalid) {
-      this.mensagemErro = 'Os campos Email e Senha são obrigatórios!';
+      this.mensagemErro = 'The email and password fields are required!';
       return;
     }
 
-    const dadosLogin = this.formularioLogin.value;
+    const dadosLogin = this.formularioLogin.value; //pega
 
     this.loginService.enviarMensagem(dadosLogin).subscribe({
+      //o subscribe diz que quando a api responder ele vai fazer algo
       next: (resposta) => {
+        //o next é quando o resultado da api é bem sucedido, ele tem um atributo reposta que é tipado pelo retorno da funcao enviar msg
         localStorage.setItem('token', resposta.token);
 
         this.router.navigate(['/']);
@@ -43,12 +45,15 @@ export class Login {
       },
 
       error: (erro) => {
-        const apiError = erro.error as ApiError;
+        const apiError = erro.error as ApiError; //pega a lista de erros e diz que ela é do tipo ApiError interface
+
+        // pega o obj dos apiErros e transforma em um Array depois pega o array
+        // [0] [0] pega o item erro e o primeiro item do array do erro
 
         const mensagem = Object.values(apiError.errors)[0][0];
 
         this.mensagemErro = mensagem;
-        this.changeDetectionStrategy.markForCheck();
+        this.changeDetectionStrategy.markForCheck(); //tem que colocar esse cara para
         return;
       },
     });

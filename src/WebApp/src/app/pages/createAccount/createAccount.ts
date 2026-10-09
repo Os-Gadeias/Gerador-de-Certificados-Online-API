@@ -28,6 +28,7 @@ export class createAccount {
   }
   sendCreateUser(): void {
     if (this.formulario.invalid) {
+      this.mensagemErro = 'The email and password fields are required!';
       return;
     }
     const dados = this.formulario.value;
