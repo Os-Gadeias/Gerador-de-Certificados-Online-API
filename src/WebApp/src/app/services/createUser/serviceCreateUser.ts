@@ -10,6 +10,6 @@ export class ServiceCreateUser {
   constructor(private http: HttpClient) {}
 
   enviarMensagem(dados: createUserCommand): Observable<CreateUserResponse> {
-    return this.http.post<CreateUserResponse>('https://localhost:7094/api/auth/cadastro', dados);
+    return this.http.post<CreateUserResponse>(this.apiUrl, dados);
   }
 }
