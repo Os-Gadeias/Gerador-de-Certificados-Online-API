@@ -81,7 +81,11 @@
             </div>
           </div>
         </div>
-
+        @if (mensagemErro) {
+          <div>
+            <p class="text-danger text-center fw-bold">{{ mensagemErro }}</p>
+          </div>
+        }
         <!-- Botões -->
         <div class="row g-2 pt-2">
           <div class="col-6">

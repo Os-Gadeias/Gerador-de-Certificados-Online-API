@@ -22,7 +22,6 @@ export class CreateCourse {
   ) {
     this.formulario = createGroup.group({
       nome: ['', Validators.required],
-      descricao: ['', Validators.required],
       cargaHoraria: ['', Validators.required],
       dataConclusao: ['', Validators.required],
     });
@@ -30,7 +29,7 @@ export class CreateCourse {
 
   protected sendCreateCourse() {
     if (this.formulario.invalid) {
-      this.mensagemErro = 'All fields must are required!';
+      this.mensagemErro = 'All fields are required!';
       return;
     }
     const dados = this.formulario.value;
