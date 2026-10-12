@@ -3,7 +3,7 @@ import { Footer } from '../../components/footer/footer';
 import { Router, RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { serviceLogin } from '../../services/login/serviceLogin';
-import { ApiError } from '../../services/apiError/apiError';
+import { ApiError } from '../../services/api/apiError/apiError';
 
 @Component({
   selector: 'app-login', //define o nome da tag html

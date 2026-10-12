@@ -5,7 +5,7 @@ import { RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ServiceCreateUser } from '../../services/createUser/serviceCreateUser';
 import { HttpErrorResponse } from '@angular/common/http';
-import { ApiError } from '../../services/apiError/apiError';
+import { ApiError } from '../../services/api/apiError/apiError';
 @Component({
   selector: 'app-createAccount',
   standalone: true,

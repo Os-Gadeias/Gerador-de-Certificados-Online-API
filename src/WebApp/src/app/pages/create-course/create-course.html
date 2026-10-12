@@ -17,7 +17,7 @@
       </div>
 
       <!-- Formulário -->
-      <form>
+      <form [formGroup]="formulario" (ngSubmit)="sendCreateCourse()">
         <!-- Course Name -->
         <div class="form-group mb-3">
           <label for="courseName" class="form-label text-light fw-medium mb-1">Course Name</label>
@@ -28,6 +28,7 @@
               id="courseName"
               placeholder=""
               required
+              formControlName="nome"
             />
           </div>
         </div>
@@ -35,7 +36,12 @@
         <!-- Description -->
         <div class="form-group mb-3">
           <label for="description" class="form-label text-light fw-medium mb-1">Description</label>
-          <textarea class="form-control rounded-3 border-0" id="description" rows="3"></textarea>
+          <textarea
+            class="form-control rounded-3 border-0"
+            id="description"
+            rows="3"
+            formControlName="descricao"
+          ></textarea>
         </div>
 
         <!-- Row: Course Hours & Completion Date -->
@@ -53,6 +59,7 @@
                 value="1"
                 min="1"
                 required
+                formControlName="cargaHoraria"
               />
             </div>
           </div>
@@ -69,6 +76,7 @@
                 id="completionDate"
                 placeholder="dd/mm/aaaa"
                 required
+                formControlName="dataConclusao"
               />
             </div>
           </div>
