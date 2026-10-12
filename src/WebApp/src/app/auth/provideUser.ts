@@ -1,11 +1,13 @@
-import { Component, Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
+import { ServiceStorage } from './serivceStorage';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProvideUser {
-  constructor() {}
+  constructor(private storage: ServiceStorage) {}
+
   userIsLogged(): boolean {
-    return localStorage.getItem('token') !== null;
+    return Boolean(this.storage.get('token'));
   }
 }

@@ -39,7 +39,19 @@ export class createAccount {
 
     this.serviceCreateUser.enviarMensagem(dados).subscribe({
       next: (resposta) => {
-        this.storage.save('token', resposta.acessToken);
+        if (
+          !resposta ||
+          typeof resposta.accessToken !== 'string' ||
+          !resposta.accessToken.trim() ||
+          typeof resposta.nomeUsuario !== 'string' ||
+          !resposta.nomeUsuario.trim()
+        ) {
+          this.mensagemErro = 'A API retornou dados de autenticação inválidos.';
+          this.changeDetector.markForCheck();
+          return;
+        }
+
+        this.storage.save('token', resposta.accessToken);
         this.storage.save('username', resposta.nomeUsuario);
 
         this.router.navigate(['/']);

@@ -41,8 +41,20 @@ export class Login {
       //o subscribe diz que quando a api responder ele vai fazer algo
       next: (resposta) => {
         //o next é quando o resultado da api é bem sucedido, ele tem um atributo reposta que é tipado pelo retorno da funcao enviar msg
-        this.storage.save('token', resposta.accessToken);
+        if (
+          !resposta ||
+          typeof resposta.accessToken !== 'string' ||
+          !resposta.accessToken.trim() ||
+          typeof resposta.username !== 'string' ||
+          !resposta.username.trim()
+        ) {
+          this.mensagemErro = 'A API retornou dados de autenticação inválidos.';
+          this.changeDetector.markForCheck();
+          return;
+        }
 
+        this.storage.save('token', resposta.accessToken);
+        this.storage.save('username', resposta.username);
         this.router.navigate(['/']);
         return;
       },
