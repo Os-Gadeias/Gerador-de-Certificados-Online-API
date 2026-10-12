@@ -17,7 +17,7 @@ public sealed class GerenciadorDeIdentidade(
         {
             Id = usuarioId,
             Email = email.Trim(),
-            UserName = email.Trim()
+            UserName = email.Split('@')[0].Trim()
         };
 
         var resultadoUsuario = await userManager.CreateAsync(usuario, senha);

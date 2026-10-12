@@ -10,6 +10,8 @@ public sealed record AutenticarUsuarioDto(
     DateTime DataExpiracaoEmUtc
 );
 
-public sealed record CadastrarUsuarioCommand(string Email, string Senha) : IRequest<Result<Guid>>;
+public sealed record CadastrarUsuarioCommand(string Email, string Senha) : IRequest<Result<CadastrarUsuarioResponse>>;
+
+public sealed record CadastrarUsuarioResponse(Guid Id, string NomeUsuario, string AccessToken);
 
 public sealed record ObterUsuarioPorIdQuery(Guid Id) : IRequest<Result<UsuarioDto>>;

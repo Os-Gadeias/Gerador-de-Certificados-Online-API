@@ -10,6 +10,8 @@
     <PackageReference Include="Moq" Version="4.20.72" />
     <PackageReference Include="MSTest" Version="4.0.1" />
     <PackageReference Include="PdfPig" Version="0.1.16" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.19.2" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.19.2" />
   </ItemGroup>
   <ItemGroup>
     <Using Include="Microsoft.VisualStudio.TestTools.UnitTesting" />
@@ -18,5 +20,6 @@
     <ProjectReference Include="..\..\src\Dominio\GeradorCertificados.Dominio.csproj" />
     <ProjectReference Include="..\..\src\Aplicacao\GeradorCertificados.Aplicacao.csproj" />
     <ProjectReference Include="..\..\src\Infraestrutura\GeradorCertificados.Infraestrutura.csproj" />
+    <ProjectReference Include="..\..\src\Api\GeradorCertificados.WebApi.csproj" />
   </ItemGroup>
 </Project>

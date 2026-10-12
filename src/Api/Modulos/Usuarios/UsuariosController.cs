@@ -42,7 +42,7 @@ public class UsuariosController(
         CadastrarUsuarioRequest req,
         CancellationToken cancellationToken)
     {
-        Result<Guid> resultado =
+        var resultado =
             await mediator.Send(new CadastrarUsuarioCommand(req.Email, req.Senha), cancellationToken);
 
         if (resultado.IsFailed)
@@ -50,15 +50,17 @@ public class UsuariosController(
 
         return CreatedAtAction(
             nameof(ObterPorId),
-            new { usuarioId = resultado.Value },
+            new { usuarioId = resultado.Value.Id },
             new CadastrarUsuarioResponse(
-                resultado.Value
+                resultado.Value.Id,
+                resultado.Value.NomeUsuario,
+                resultado.Value.AccessToken
             )
         );
     }
 
     [HttpPost("login")]
-    [ProducesResponseType<CadastrarUsuarioResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType<AutenticarUsuarioDto>(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [AllowAnonymous]
     public async Task<ActionResult<AutenticarUsuarioDto>> Login(LogarUsuarioRequest req, CancellationToken cancellationToken)
