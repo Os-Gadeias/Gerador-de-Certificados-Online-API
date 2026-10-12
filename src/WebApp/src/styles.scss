@@ -82,3 +82,7 @@ section {
 .smallerSection {
   min-height: 80vh;
 }
+
+html {
+  scroll-behavior: smooth;
+}
