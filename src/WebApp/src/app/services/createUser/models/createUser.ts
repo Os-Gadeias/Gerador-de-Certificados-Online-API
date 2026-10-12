@@ -4,4 +4,6 @@ export interface createUserCommand {
 }
 export interface CreateUserResponse {
   usuarioId: string;
+  nomeUsuario: string;
+  acessToken: string;
 }

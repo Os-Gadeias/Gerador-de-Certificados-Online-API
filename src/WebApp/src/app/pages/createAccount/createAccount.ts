@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { Footer } from '../../components/footer/footer';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ServiceCreateUser } from '../../services/createUser/serviceCreateUser';
@@ -20,6 +20,7 @@ export class createAccount {
     private createUser: FormBuilder,
     private serviceCreateUser: ServiceCreateUser,
     private changeDetector: ChangeDetectorRef,
+    private router: Router,
   ) {
     this.formulario = createUser.group({
       email: ['', Validators.required],
@@ -35,10 +36,10 @@ export class createAccount {
 
     this.serviceCreateUser.enviarMensagem(dados).subscribe({
       next: (resposta) => {
-        console.log('Usuário criado!');
-        console.log(resposta.usuarioId);
+        localStorage.setItem('token', resposta.acessToken);
+        localStorage.setItem('user', resposta.nomeUsuario);
 
-        this.mensagemErro = '';
+        this.router.navigate(['/']);
       },
 
       error: (erro: HttpErrorResponse) => {
