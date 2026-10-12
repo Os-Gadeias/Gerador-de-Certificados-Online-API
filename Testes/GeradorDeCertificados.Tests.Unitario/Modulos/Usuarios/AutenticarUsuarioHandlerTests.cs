@@ -53,6 +53,7 @@ public class AutenticarUsuarioHandlerTests
         Assert.AreEqual(usuarioId, resultado.Value.ClienteId);
         Assert.AreEqual(token, resultado.Value.AccessToken);
         Assert.AreEqual(dataExpiracao, resultado.Value.DataExpiracaoEmUtc);
+        Assert.AreEqual(email.Split('@')[0], resultado.Value.Username);
     }
 
     [TestMethod]

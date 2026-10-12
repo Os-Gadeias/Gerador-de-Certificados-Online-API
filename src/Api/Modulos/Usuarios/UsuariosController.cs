@@ -75,6 +75,7 @@ public class UsuariosController(
 
         return Ok(new AutenticarUsuarioDto(
             resultado.Value.ClienteId,
+            req.Email.Split('@')[0],
             resultado.Value.AccessToken,
             resultado.Value.DataExpiracaoEmUtc
         ));

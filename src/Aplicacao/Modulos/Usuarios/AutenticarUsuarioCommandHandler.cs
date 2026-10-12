@@ -31,6 +31,7 @@ public class AutenticarUsuarioCommandHandler(
 
         return new AutenticarUsuarioDto(
             usuario.Id,
+            command.Email.Split('@')[0],
             accessToken.Token,
             accessToken.DataExpiracaoEmUtc
         );

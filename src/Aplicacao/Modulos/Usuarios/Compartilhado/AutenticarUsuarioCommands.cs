@@ -6,6 +6,7 @@ namespace GeradorCertificados.Aplicacao.Modulos.Usuarios.Compartilhado;
 
 public sealed record AutenticarUsuarioDto(
     Guid ClienteId,
+    string Username,
     string AccessToken,
     DateTime DataExpiracaoEmUtc
 );
