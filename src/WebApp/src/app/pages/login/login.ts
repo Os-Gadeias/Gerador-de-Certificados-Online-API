@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { serviceLogin } from '../../services/login/serviceLogin';
 import { HttpErrorResponse } from '@angular/common/http';
 import { extrairMensagemErro } from '../../services/api/apiError/apiError';
+import { ServiceStorage } from '../../auth/serivceStorage';
 
 @Component({
   selector: 'app-login', //define o nome da tag html
@@ -21,6 +22,7 @@ export class Login {
     private loginService: serviceLogin,
     private router: Router,
     private changeDetector: ChangeDetectorRef,
+    private storage: ServiceStorage,
   ) {
     this.formularioLogin = this.login.group({
       email: ['', Validators.required],
@@ -39,7 +41,7 @@ export class Login {
       //o subscribe diz que quando a api responder ele vai fazer algo
       next: (resposta) => {
         //o next é quando o resultado da api é bem sucedido, ele tem um atributo reposta que é tipado pelo retorno da funcao enviar msg
-        localStorage.setItem('token', resposta.accessToken);
+        this.storage.save('token', resposta.accessToken);
 
         this.router.navigate(['/']);
         return;
