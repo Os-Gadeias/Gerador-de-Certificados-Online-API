@@ -7,3 +7,10 @@ export interface CreateCourseRequest {
 export interface CreateCourseResponse {
   id: string;
 }
+export interface ListCourseResponse {
+  id: string;
+  nome: string;
+  descricao: string | null;
+  cargaHoraria: number;
+  dataConclusao: string;
+}

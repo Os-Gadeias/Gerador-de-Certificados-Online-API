@@ -86,3 +86,39 @@ section {
 html {
   scroll-behavior: smooth;
 }
+
+.courses-list {
+  max-height: 60vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  padding-right: 0.5rem;
+
+  // Firefox
+  scrollbar-width: thin;
+  scrollbar-color: $primaria $preto-suave;
+
+  // Chrome, Edge e Safari
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: $preto-suave;
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: $primaria;
+    border-radius: 10px;
+    border: 2px solid $preto-suave;
+
+    &:hover {
+      background: $magenta;
+    }
+  }
+}
