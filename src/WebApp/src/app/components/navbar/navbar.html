@@ -1,10 +1,19 @@
-<nav class="navbar navbar-expand-lg fixed-top bg-info">
+<nav
+  class="navbar navbar-expand-lg fixed-top bg-lighterDark border-bottom border-secondary border-opacity-10 py-3 shadow-sm"
+>
   <div class="container">
-    <a class="navbar-brand fw-medium fs-3 fst-italic text-secondary" href="#"
-      >Certificate Generator
+    <!-- Logótipo -->
+    <a
+      class="navbar-brand fw-bold fs-4 fst-italic text-light d-flex align-items-center gap-2"
+      href="#"
+    >
+      <i class="bi bi-shield-check text-primary"></i>
+      Certificate Generator
     </a>
+
+    <!-- Botão Responsivo (Menu Mobile) -->
     <button
-      class="navbar-toggler"
+      class="navbar-toggler border-0 text-light shadow-none"
       type="button"
       data-bs-toggle="collapse"
       data-bs-target="#navbarNav"
@@ -15,41 +24,60 @@
       <span class="navbar-toggler-icon"></span>
     </button>
 
+    <!-- Links e Ações do Menu -->
     <div class="collapse navbar-collapse" id="navbarNav">
-      <span class="ms-auto"></span>
-
-      <ul class="navbar-nav">
+      <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-3">
+        <!-- Itens dinâmicos -->
         @for (item of itens; track $index) {
           <li class="nav-item">
-            <a class="nav-link fs-5 text-secondary fw-medium" aria-current="page" [href]="item.url">
-              <i class="bi {{ item.icone }}"></i>
+            <a
+              class="nav-link text-secondary fw-medium px-2 rounded-3 transition-all fs-5"
+              aria-current="page"
+              [href]="item.url"
+            >
+              <i class="bi {{ item.icone }} me-1 text-primary"></i>
               {{ item.titulo }}
             </a>
           </li>
         }
-      </ul>
-      @if (provideUser.isLoggedIn()) {
-        <div class="dropdown">
-          <button
-            class="nav-link fs-5 text-secondary fw-medium"
-            type="button"
-            data-bs-toggle="dropdown"
-          >
-            <i class="bi bi-person"></i>
-            {{ provideUser.username() }}
-          </button>
 
-          <ul class="dropdown-menu">
-            <li>
-              <button class="dropdown-item" (click)="provideUser.logout()">Sair</button>
-            </li>
-          </ul>
-        </div>
-      } @else {
-        <a routerLink="/login" class="nav-link fs-5 text-secondary fw-medium" aria-current="page">
-          <i class="bi bi-plus-lg"></i>Login
-        </a>
-      }
+        <!-- Bloco de Autenticação -->
+        @if (provideUser.isLoggedIn()) {
+          <li class="nav-item dropdown ms-lg-2">
+            <button
+              class="btn btn-dark dropdown-toggle text-light fw-medium px-3 py-2 rounded-pill border border-secondary border-opacity-25 d-flex align-items-center gap-2"
+              type="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <i class="bi bi-person-circle text-primary fs-5"></i>
+              <span>{{ provideUser.username() }}</span>
+            </button>
+
+            <ul
+              class="dropdown-menu dropdown-menu-dark dropdown-menu-end bg-dark border border-secondary border-opacity-10 shadow-lg mt-2 rounded-3"
+            >
+              <li>
+                <button
+                  class="dropdown-item text-danger d-flex align-items-center gap-2 py-2"
+                  (click)="provideUser.logout()"
+                >
+                  <i class="bi bi-box-arrow-right"></i> Sair
+                </button>
+              </li>
+            </ul>
+          </li>
+        } @else {
+          <li class="nav-item ms-lg-2">
+            <a
+              routerLink="/login"
+              class="btn btn-primary text-white fw-semibold px-4 py-2 rounded-pill shadow-sm d-flex align-items-center gap-2"
+            >
+              <i class="bi bi-box-arrow-in-right"></i> Login
+            </a>
+          </li>
+        }
+      </ul>
     </div>
   </div>
 </nav>

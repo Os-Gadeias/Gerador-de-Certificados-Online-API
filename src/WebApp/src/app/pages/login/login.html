@@ -1,46 +1,85 @@
-<section class="authSection">
+<section class="authSection bg-lighterDark d-flex align-items-center justify-content-center p-4">
   <div class="container d-flex align-items-center justify-content-center">
     <form
-      class="container formularioInput certificado border border-info p-4 rounded d-flex flex-column gap-4"
+      class="formularioInput certificado border border-primary border-opacity-50 p-4 p-md-5 rounded-4 bg-dark text-light d-flex flex-column gap-4 w-100 shadow-lg"
       [formGroup]="formularioLogin"
       (ngSubmit)="sendUserLogin()"
     >
-      <div class="d-flex flex-column align-items-center">
-        <h3 class="text-center display-6 m-0">Welcome Back!</h3>
-        <hr class="m-0 p-0 text-info w-50" />
+      <!-- Cabeçalho -->
+      <div class="d-flex flex-column align-items-center text-center">
+        <h3 class="fw-bold text-light display-6 mb-1">Welcome Back!</h3>
+        <p class="text-secondary small mb-2">Access your account to manage certificates</p>
+        <div class="w-25 border-bottom border-primary border-2 opacity-75"></div>
       </div>
+
+      <!-- Campo de E-mail -->
       <div class="form-group">
-        <label for="email">Email address</label>
-        <input
-          type="email"
-          class="form-control"
-          id="email"
-          aria-describedby="emailHelp"
-          placeholder="Enter email"
-          formControlName="email"
-        />
-        <small id="emailHelp" class="form-text text-light"
-          >We'll never share your email with anyone else.</small
+        <label for="email" class="form-label text-light fw-medium mb-1">Email Address</label>
+        <div class="input-group">
+          <input
+            type="email"
+            class="form-control rounded-3 border border-primary border-opacity-50 ps-2"
+            id="email"
+            aria-describedby="emailHelp"
+            placeholder="Enter your email"
+            formControlName="email"
+            required
+          />
+        </div>
+        <small id="emailHelp" class="form-text text-secondary opacity-75 mt-1 d-block">
+          We'll never share your email with anyone else.
+        </small>
+      </div>
+
+      <!-- Campo de Senha -->
+      <div class="form-group">
+        <label for="exampleInputPassword1" class="form-label text-light fw-medium mb-1"
+          >Password</label
         >
+        <div class="input-group">
+          <input
+            type="password"
+            class="form-control rounded-3 border border-primary border-opacity-50 ps-2"
+            id="exampleInputPassword1"
+            placeholder="Enter your password"
+            formControlName="senha"
+            required
+          />
+        </div>
       </div>
-      <div class="form-group">
-        <label for="exampleInputPassword1">Password</label>
-        <input
-          type="password"
-          class="form-control"
-          id="exampleInputPassword1"
-          placeholder="Password"
-          formControlName="senha"
-        />
-      </div>
+
+      <!-- Exibição de Erro -->
       @if (mensagemErro) {
-        <div>
-          <p class="text-danger m-0 p-0">{{ mensagemErro }}</p>
+        <div
+          class="alert alert-danger bg-danger bg-opacity-10 border border-danger border-opacity-25 text-danger rounded-3 p-2 small mb-0 d-flex align-items-center gap-2"
+        >
+          <i class="bi bi-exclamation-triangle-fill"></i>
+          <span>{{ mensagemErro }}</span>
         </div>
       }
-      <button type="submit" class="btn btn-primary">Submit</button>
-      <span>Don't have a account? <a routerLink="/createAccount">Create Here!</a></span>
+
+      <!-- Botão de Submissão -->
+      <button
+        type="submit"
+        class="btn btn-primary w-100 py-3 rounded-3 text-white fw-bold shadow-sm"
+      >
+        Sign In <i class="bi bi-arrow-right ms-1"></i>
+      </button>
+
+      <!-- Rodapé do Formulário (Criar conta) -->
+      <div
+        class="text-center text-secondary small pt-2 border-top border-secondary border-opacity-10"
+      >
+        Don't have an account?
+        <a
+          routerLink="/createAccount"
+          class="text-primary fw-semibold text-decoration-none ms-1 hover-underline"
+        >
+          Create Here!
+        </a>
+      </div>
     </form>
   </div>
 </section>
+
 <app-footer></app-footer>
