@@ -38,7 +38,9 @@ export class CreateCourse {
     this.servicoCadastroCurso.enviarMensagem(dados).subscribe({
       next: (resposta) => {
         console.log(resposta.id);
-        this.router.navigate(['/']);
+        this.router.navigate(['/main'], {
+          fragment: 'courses', //faz com que ele va pra section que queremos
+        });
       },
       error: (erro: HttpErrorResponse) => {
         const mensagem = extrairMensagemErro(erro);
