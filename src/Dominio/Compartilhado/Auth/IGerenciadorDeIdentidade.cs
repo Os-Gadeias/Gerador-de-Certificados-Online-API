@@ -23,5 +23,6 @@ public interface IGerenciadorDeIdentidade
         string senha
     );
     Task ExcluirAsync(Guid id);
+    Task LogoutAsync(Guid id);
     Task<UsuarioDto?> SelecionarIdAsync(Guid id);
 }

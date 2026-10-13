@@ -2,7 +2,8 @@ import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormGroup, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { serviceCreateCourse } from '../../services/course/createCourse/serviceCreateCourse';
-import { ApiError } from '../../services/api/apiError/apiError';
+import { extrairMensagemErro } from '../../services/api/apiError/apiError';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   imports: [RouterLink, ReactiveFormsModule],
@@ -39,11 +40,9 @@ export class CreateCourse {
         console.log(resposta.id);
         this.router.navigate(['/']);
       },
-      error: (erro) => {
-        const apiError = erro.error as ApiError;
-
-        const mensagem = Object.values(apiError.errors)[0][0];
-
+      error: (erro: HttpErrorResponse) => {
+        const mensagem = extrairMensagemErro(erro);
+        console.log(mensagem);
         this.mensagemErro = mensagem;
         this.changeDetector.markForCheck();
       },

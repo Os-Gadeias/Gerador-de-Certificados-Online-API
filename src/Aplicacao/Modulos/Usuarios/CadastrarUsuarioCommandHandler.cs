@@ -8,10 +8,11 @@ using MediatR;
 namespace GeradorCertificados.Aplicacao.Modulos.Usuarios;
 
 public sealed class CadastrarUsuarioCommandHandler(
-    IGerenciadorDeIdentidade gerenciadorDeIdentidade
-) : IRequestHandler<CadastrarUsuarioCommand, Result<Guid>>
+    IGerenciadorDeIdentidade gerenciadorDeIdentidade,
+    IEmissorDeTokens emissorDeTokens
+) : IRequestHandler<CadastrarUsuarioCommand, Result<CadastrarUsuarioResponse>>
 {
-    public async Task<Result<Guid>> Handle(CadastrarUsuarioCommand command, CancellationToken cancellationToken)
+    public async Task<Result<CadastrarUsuarioResponse>> Handle(CadastrarUsuarioCommand command, CancellationToken cancellationToken)
     {
         Guid idUsuarioCadastrado = Guid.CreateVersion7();
 
@@ -23,7 +24,12 @@ public sealed class CadastrarUsuarioCommandHandler(
                command.Senha
                );
 
-            return Result.Ok(idUsuarioCadastrado);
+            var token = emissorDeTokens.CriarToken(idUsuarioCadastrado, command.Email);
+
+            return new CadastrarUsuarioResponse(
+                idUsuarioCadastrado,
+                command.Email.Split('@')[0],
+                token.Token);
         }
         catch (ConflitoDeIdentidadeException ex)
         {

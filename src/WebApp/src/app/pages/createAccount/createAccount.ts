@@ -1,11 +1,13 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { Footer } from '../../components/footer/footer';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ServiceCreateUser } from '../../services/createUser/serviceCreateUser';
 import { HttpErrorResponse } from '@angular/common/http';
-import { ApiError } from '../../services/api/apiError/apiError';
+import { extrairMensagemErro } from '../../services/api/apiError/apiError';
+import { ProvideUser } from '../../auth/provideUser';
+
 @Component({
   selector: 'app-createAccount',
   standalone: true,
@@ -20,6 +22,8 @@ export class createAccount {
     private createUser: FormBuilder,
     private serviceCreateUser: ServiceCreateUser,
     private changeDetector: ChangeDetectorRef,
+    private router: Router,
+    private provideUser: ProvideUser,
   ) {
     this.formulario = createUser.group({
       email: ['', Validators.required],
@@ -35,17 +39,26 @@ export class createAccount {
 
     this.serviceCreateUser.enviarMensagem(dados).subscribe({
       next: (resposta) => {
-        console.log('Usuário criado!');
-        console.log(resposta.usuarioId);
+        if (
+          !resposta ||
+          typeof resposta.accessToken !== 'string' ||
+          !resposta.accessToken.trim() ||
+          typeof resposta.nomeUsuario !== 'string' ||
+          !resposta.nomeUsuario.trim()
+        ) {
+          this.mensagemErro = 'A API retornou dados de autenticação inválidos.';
+          this.changeDetector.markForCheck();
+          return;
+        }
 
-        this.mensagemErro = '';
+        this.provideUser.login(resposta.accessToken, resposta.nomeUsuario);
+
+        this.router.navigate(['/']);
       },
 
       error: (erro: HttpErrorResponse) => {
-        const apiError = erro.error as ApiError;
-
-        const mensagem = Object.values(apiError.errors)[0][0];
-
+        const mensagem = extrairMensagemErro(erro);
+        console.log(mensagem);
         this.mensagemErro = mensagem;
         this.changeDetector.markForCheck();
       },

@@ -17,7 +17,7 @@ public sealed class GerenciadorDeIdentidade(
         {
             Id = usuarioId,
             Email = email.Trim(),
-            UserName = email.Trim()
+            UserName = email.Split('@')[0].Trim()
         };
 
         var resultadoUsuario = await userManager.CreateAsync(usuario, senha);
@@ -84,5 +84,25 @@ public sealed class GerenciadorDeIdentidade(
 
         if (usuario is not null)
             await userManager.DeleteAsync(usuario);
+    }
+
+    public async Task LogoutAsync(Guid usuarioId)
+    {
+        var usuario = await userManager.FindByIdAsync(usuarioId.ToString());
+
+        if (usuario is null)
+            return;
+
+        var resultado = await userManager.UpdateSecurityStampAsync(usuario);
+
+        if (!resultado.Succeeded)
+        {
+            string erros = string.Join(
+                "; ",
+                resultado.Errors.Select(erro => erro.Description));
+
+            throw new InvalidOperationException(
+                $"Não foi possível encerrar a sessão do usuário {usuarioId}: {erros}");
+        }
     }
 }

@@ -4,9 +4,6 @@ public sealed record CadastrarUsuarioRequest(
     string Email,
     string Senha
 );
-public sealed record CadastrarUsuarioResponse(
-    Guid UsuarioId
-);
 public sealed record ObterUsuarioResponse(
     Guid Id,
     string Email

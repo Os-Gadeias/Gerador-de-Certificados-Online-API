@@ -3,5 +3,7 @@ export interface createUserCommand {
   senha: string;
 }
 export interface CreateUserResponse {
-  usuarioId: string;
+  id: string;
+  nomeUsuario: string;
+  accessToken: string;
 }

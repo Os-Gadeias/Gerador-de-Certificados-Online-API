@@ -3,7 +3,9 @@ import { Footer } from '../../components/footer/footer';
 import { Router, RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { serviceLogin } from '../../services/login/serviceLogin';
-import { ApiError } from '../../services/api/apiError/apiError';
+import { HttpErrorResponse } from '@angular/common/http';
+import { extrairMensagemErro } from '../../services/api/apiError/apiError';
+import { ProvideUser } from '../../auth/provideUser';
 
 @Component({
   selector: 'app-login', //define o nome da tag html
@@ -19,7 +21,8 @@ export class Login {
     private login: FormBuilder,
     private loginService: serviceLogin,
     private router: Router,
-    private changeDetectionStrategy: ChangeDetectorRef,
+    private changeDetector: ChangeDetectorRef,
+    private provideUser: ProvideUser,
   ) {
     this.formularioLogin = this.login.group({
       email: ['', Validators.required],
@@ -38,22 +41,28 @@ export class Login {
       //o subscribe diz que quando a api responder ele vai fazer algo
       next: (resposta) => {
         //o next é quando o resultado da api é bem sucedido, ele tem um atributo reposta que é tipado pelo retorno da funcao enviar msg
-        localStorage.setItem('token', resposta.accessToken);
+        if (
+          !resposta ||
+          typeof resposta.accessToken !== 'string' ||
+          !resposta.accessToken.trim() ||
+          typeof resposta.username !== 'string' ||
+          !resposta.username.trim()
+        ) {
+          this.mensagemErro = 'A API retornou dados de autenticação inválidos.';
+          this.changeDetector.markForCheck();
+          return;
+        }
 
+        this.provideUser.login(resposta.accessToken, resposta.username);
         this.router.navigate(['/']);
         return;
       },
 
-      error: (erro) => {
-        const apiError = erro.error as ApiError; //pega a lista de erros e diz que ela é do tipo ApiError interface
-
-        // pega o obj dos apiErros e transforma em um Array depois pega o array
-        // [0] [0] pega o item erro e o primeiro item do array do erro
-
-        const mensagem = Object.values(apiError.errors)[0][0];
-
+      error: (erro: HttpErrorResponse) => {
+        const mensagem = extrairMensagemErro(erro);
+        console.log(mensagem);
         this.mensagemErro = mensagem;
-        this.changeDetectionStrategy.markForCheck(); //tem que colocar esse cara para
+        this.changeDetector.markForCheck();
         return;
       },
     });

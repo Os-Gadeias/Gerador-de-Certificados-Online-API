@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { ProvideUser } from '../../auth/provideUser';
 
 interface NavBarComponent {
   titulo: string;
@@ -8,7 +9,7 @@ interface NavBarComponent {
 }
 
 @Component({
-  imports: [],
+  imports: [RouterLink],
   selector: 'app-navbar',
   templateUrl: './navbar.html',
 })
@@ -16,6 +17,7 @@ export class Navbar {
   public readonly itens: NavBarComponent[] = [
     { titulo: 'Home', url: '#home', icone: 'bi-house-door-fill' },
     { titulo: 'Courses', url: '#courses', icone: 'bi-backpack' },
-    { titulo: 'Certificate', url: '#Certificados', icone: 'bi-patch-check' },
+    { titulo: 'Certificate', url: '#certificade', icone: 'bi-patch-check' },
   ];
+  constructor(protected provideUser: ProvideUser) {}
 }
