@@ -3,6 +3,7 @@ using GeradorCertificados.Aplicacao.Modulos.Dtos.Cursos;
 using GeradorCertificados.WebApi.Compartilhado.Http;
 using MassTransit;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GeradorCertificados.WebApi.Modulos.Cursos;
@@ -53,4 +54,20 @@ public class CursoController(IMediator mediator) : ControllerBase
         return Ok(result.Value);
     }
 
+    [Authorize]
+    [HttpGet]
+    [ProducesResponseType<List<CursoDto>>(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult<List<CursoDto>>> SelecionarTodos(
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(
+            new SelecionarTodosCursosQuery(),
+            cancellationToken);
+
+        if (result.IsFailed)
+            return this.ProblemDetails(result);
+
+        return Ok(result.Value);
+    }
 }
