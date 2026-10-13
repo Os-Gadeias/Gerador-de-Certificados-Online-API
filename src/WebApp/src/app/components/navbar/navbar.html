@@ -28,6 +28,28 @@
           </li>
         }
       </ul>
+      @if (provideUser.isLoggedIn()) {
+        <div class="dropdown">
+          <button
+            class="nav-link fs-5 text-secondary fw-medium"
+            type="button"
+            data-bs-toggle="dropdown"
+          >
+            <i class="bi bi-person"></i>
+            {{ provideUser.username() }}
+          </button>
+
+          <ul class="dropdown-menu">
+            <li>
+              <button class="dropdown-item" (click)="provideUser.logout()">Sair</button>
+            </li>
+          </ul>
+        </div>
+      } @else {
+        <a routerLink="/login" class="nav-link fs-5 text-secondary fw-medium" aria-current="page">
+          <i class="bi bi-plus-lg"></i>Login
+        </a>
+      }
     </div>
   </div>
 </nav>
