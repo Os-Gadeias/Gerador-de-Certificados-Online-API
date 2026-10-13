@@ -15,15 +15,17 @@
           Your Registered <span class="text-primary">Courses</span>
         </h2>
         <p class="text-secondary lead mb-4">
-          Manage, edit, or track all the courses you have created. Register new programs to keep
-          issuing automated certificates to your students.
+          Manage or track all the courses you have created. Register new programs to keep issuing
+          automated certificates to your students.
         </p>
-        <a
-          routerLink="../createCourse"
-          class="btn btn-primary btn-lg rounded-3 px-4 py-3 fw-bold text-white shadow d-inline-flex align-items-center gap-2"
-        >
-          <i class="bi bi-plus-circle fs-5"></i> Register New Course
-        </a>
+        @if (provideUser.isLoggedIn()) {
+          <a
+            routerLink="../createCourse"
+            class="btn btn-primary btn-lg rounded-3 px-4 py-3 fw-bold text-white shadow d-inline-flex align-items-center gap-2"
+          >
+            <i class="bi bi-plus-circle fs-5"></i> Register New Course
+          </a>
+        }
       </div>
 
       <!-- Coluna Direita: Listagem de Cursos (Estado Vazio) -->
@@ -35,7 +37,20 @@
           <div id="courseListContainer" class="d-flex flex-column gap-3">
             <!-- Estado Vazio (Mensagem Padrão) -->
             <div class="courses-list">
-              @if (courses().length === 0) {
+              @if (!provideUser.isLoggedIn()) {
+                <div class="text-center py-5">
+                  <div class="mb-3">
+                    <i class="bi bi-person text-secondary display-1 opacity-50"></i>
+                  </div>
+                  <h4 class="text-light fw-semibold mb-2">Loggin to create your Courses!</h4>
+                  <a
+                    class="btn btn-primary btn-lg mt-2 rounded-3 px-4 py-3 fw-bold text-white shadow d-inline-flex align-items-center gap-2"
+                    routerLink="../login"
+                  >
+                    Login Here!
+                  </a>
+                </div>
+              } @else if (courses().length === 0 && provideUser.isLoggedIn()) {
                 <div class="text-center py-5">
                   <div class="mb-3">
                     <i class="bi bi-journal-x text-secondary display-1 opacity-50"></i>

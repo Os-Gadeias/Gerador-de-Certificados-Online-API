@@ -4,6 +4,7 @@ import { ServiceListCourses } from '../../services/course/listCourses/serviceLis
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ListCourseResponse } from '../../services/course/models/Course';
 import { map } from 'rxjs';
+import { ProvideUser } from '../../auth/provideUser';
 interface ListCourseViewModel {
   id: string;
   nome: string;
@@ -28,6 +29,7 @@ function paraViewModel(dto: ListCourseResponse): ListCourseViewModel {
   templateUrl: './courses.html',
 })
 export class Courses {
+  readonly provideUser = inject(ProvideUser);
   readonly listCourses = inject(ServiceListCourses);
 
   protected readonly courses = toSignal(
