@@ -5,7 +5,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { serviceLogin } from '../../services/login/serviceLogin';
 import { HttpErrorResponse } from '@angular/common/http';
 import { extrairMensagemErro } from '../../services/api/apiError/apiError';
-import { ServiceStorage } from '../../auth/serivceStorage';
+import { ProvideUser } from '../../auth/provideUser';
 
 @Component({
   selector: 'app-login', //define o nome da tag html
@@ -22,7 +22,7 @@ export class Login {
     private loginService: serviceLogin,
     private router: Router,
     private changeDetector: ChangeDetectorRef,
-    private storage: ServiceStorage,
+    private provideUser: ProvideUser,
   ) {
     this.formularioLogin = this.login.group({
       email: ['', Validators.required],
@@ -53,8 +53,7 @@ export class Login {
           return;
         }
 
-        this.storage.save('token', resposta.accessToken);
-        this.storage.save('username', resposta.username);
+        this.provideUser.login(resposta.accessToken, resposta.username);
         this.router.navigate(['/']);
         return;
       },

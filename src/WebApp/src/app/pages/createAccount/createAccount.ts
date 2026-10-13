@@ -6,7 +6,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ServiceCreateUser } from '../../services/createUser/serviceCreateUser';
 import { HttpErrorResponse } from '@angular/common/http';
 import { extrairMensagemErro } from '../../services/api/apiError/apiError';
-import { ServiceStorage } from '../../auth/serivceStorage';
+import { ProvideUser } from '../../auth/provideUser';
 
 @Component({
   selector: 'app-createAccount',
@@ -23,7 +23,7 @@ export class createAccount {
     private serviceCreateUser: ServiceCreateUser,
     private changeDetector: ChangeDetectorRef,
     private router: Router,
-    private storage: ServiceStorage,
+    private provideUser: ProvideUser,
   ) {
     this.formulario = createUser.group({
       email: ['', Validators.required],
@@ -51,8 +51,7 @@ export class createAccount {
           return;
         }
 
-        this.storage.save('token', resposta.accessToken);
-        this.storage.save('username', resposta.nomeUsuario);
+        this.provideUser.login(resposta.accessToken, resposta.nomeUsuario);
 
         this.router.navigate(['/']);
       },
