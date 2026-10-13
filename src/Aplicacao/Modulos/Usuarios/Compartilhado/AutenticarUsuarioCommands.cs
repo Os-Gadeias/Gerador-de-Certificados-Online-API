@@ -15,4 +15,6 @@ public sealed record CadastrarUsuarioCommand(string Email, string Senha) : IRequ
 
 public sealed record CadastrarUsuarioResponse(Guid Id, string NomeUsuario, string AccessToken);
 
+public sealed record LogoutUsuarioCommand : IRequest<Result>;
+
 public sealed record ObterUsuarioPorIdQuery(Guid Id) : IRequest<Result<UsuarioDto>>;

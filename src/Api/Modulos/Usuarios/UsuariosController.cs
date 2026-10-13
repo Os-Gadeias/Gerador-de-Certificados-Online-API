@@ -80,4 +80,20 @@ public class UsuariosController(
             resultado.Value.DataExpiracaoEmUtc
         ));
     }
+
+    [Authorize]
+    [HttpPost("logout")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> Logout(CancellationToken cancellationToken)
+    {
+        var resultado = await mediator.Send(
+            new LogoutUsuarioCommand(),
+            cancellationToken);
+
+        if (resultado.IsFailed)
+            return this.ProblemDetails(resultado);
+
+        return NoContent();
+    }
 }
