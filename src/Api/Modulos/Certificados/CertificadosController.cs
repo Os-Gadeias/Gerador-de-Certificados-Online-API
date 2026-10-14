@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace GeradorCertificados.WebApi.Modulos.Certificados;
 
 [ApiController]
-[Route("api/cursos")]
+[Route("api/certificado")]
 public class CertificadosController(IMediator mediator) : ControllerBase
 {
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
