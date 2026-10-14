@@ -24,6 +24,7 @@ export class CreateCourse {
     this.formulario = createGroup.group({
       nome: ['', Validators.required],
       cargaHoraria: ['', Validators.required],
+      descricao: [''],
       dataConclusao: ['', Validators.required],
     });
   }
