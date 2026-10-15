@@ -29,7 +29,9 @@ export class Login {
     private loginService: serviceLogin,
     private router: Router,
     private provideUser: ProvideUser,
-  ) {}
+  ) {
+    if (provideUser.isLoggedIn()) router.navigate(['/']);
+  }
   sendUserLogin(event: SubmitEvent): void {
     event.preventDefault();
 

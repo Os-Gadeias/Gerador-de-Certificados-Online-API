@@ -36,7 +36,9 @@ export class createAccount {
     private serviceCreateUser: ServiceCreateUser,
     private router: Router,
     private provideUser: ProvideUser,
-  ) {}
+  ) {
+    if (provideUser.isLoggedIn()) router.navigate(['/']);
+  }
   sendCreateUser(event: SubmitEvent): void {
     event.preventDefault();
 
