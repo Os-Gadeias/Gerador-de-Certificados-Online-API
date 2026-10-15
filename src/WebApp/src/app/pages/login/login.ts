@@ -1,43 +1,43 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { Footer } from '../../components/footer/footer';
 import { Router, RouterLink } from '@angular/router';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { serviceLogin } from '../../services/login/serviceLogin';
 import { HttpErrorResponse } from '@angular/common/http';
 import { extrairMensagemErro } from '../../services/api/apiError/apiError';
 import { ProvideUser } from '../../auth/provideUser';
+import { form, FormField, required } from '@angular/forms/signals';
+
+interface LoginFormModel {
+  readonly email: string;
+  readonly senha: string;
+}
 
 @Component({
   selector: 'app-login', //define o nome da tag html
   standalone: true, //com esse cara verdadeiro pode-se usar os imports abaixo
-  imports: [Footer, RouterLink, ReactiveFormsModule],
+  imports: [Footer, RouterLink, FormField],
   templateUrl: './login.html', //o html relacionado a esse typescript está nessa propria pasta /login/login.html,
 })
 export class Login {
-  public formularioLogin!: FormGroup;
-  mensagemErro!: string;
-
+  protected mensagemErro = '';
+  protected readonly modelForm = signal<LoginFormModel>({ email: '', senha: '' });
+  protected readonly formLogin = form(this.modelForm, (model) => {
+    required(model.email, { message: 'Insert your Email!' });
+    required(model.senha, { message: 'Insert your Password!' });
+  });
   constructor(
-    private login: FormBuilder,
     private loginService: serviceLogin,
     private router: Router,
-    private changeDetector: ChangeDetectorRef,
     private provideUser: ProvideUser,
   ) {
-    this.formularioLogin = this.login.group({
-      email: ['', Validators.required],
-      senha: ['', Validators.required],
-    });
+    if (provideUser.isLoggedIn()) router.navigate(['/']);
   }
-  sendUserLogin(): void {
-    if (this.formularioLogin.invalid) {
-      this.mensagemErro = 'The email and password fields are required!';
-      return;
-    }
+  sendUserLogin(event: SubmitEvent): void {
+    event.preventDefault();
 
-    const dadosLogin = this.formularioLogin.value; //pega
+    const valorFormulario = this.modelForm;
 
-    this.loginService.enviarMensagem(dadosLogin).subscribe({
+    this.loginService.enviarMensagem(valorFormulario()).subscribe({
       //o subscribe diz que quando a api responder ele vai fazer algo
       next: (resposta) => {
         //o next é quando o resultado da api é bem sucedido, ele tem um atributo reposta que é tipado pelo retorno da funcao enviar msg
@@ -49,7 +49,6 @@ export class Login {
           !resposta.username.trim()
         ) {
           this.mensagemErro = 'A API retornou dados de autenticação inválidos.';
-          this.changeDetector.markForCheck();
           return;
         }
 
@@ -62,7 +61,6 @@ export class Login {
         const mensagem = extrairMensagemErro(erro);
         console.log(mensagem);
         this.mensagemErro = mensagem;
-        this.changeDetector.markForCheck();
         return;
       },
     });

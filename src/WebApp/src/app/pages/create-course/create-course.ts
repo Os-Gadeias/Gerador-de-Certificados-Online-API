@@ -1,40 +1,68 @@
-import { ChangeDetectorRef, Component, inject } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { FormGroup, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { serviceCreateCourse } from '../../services/course/createCourse/serviceCreateCourse';
 import { extrairMensagemErro } from '../../services/api/apiError/apiError';
 import { HttpErrorResponse } from '@angular/common/http';
+import { ProvideUser } from '../../auth/provideUser';
+import { form, FormField, minLength, required, validate } from '@angular/forms/signals';
+
+interface CreateCourseModel {
+  nome: string;
+  descricao: string;
+  cargaHoraria: number;
+  dataConclusao: string;
+}
 
 @Component({
-  imports: [RouterLink, ReactiveFormsModule],
+  imports: [RouterLink, FormField],
   selector: 'app-create-course',
   templateUrl: './create-course.html',
 })
 export class CreateCourse {
-  public formulario!: FormGroup;
-
   mensagemErro = '';
+
+  protected modelForm = signal<CreateCourseModel>({
+    nome: '',
+    descricao: '',
+    cargaHoraria: 0,
+    dataConclusao: '',
+  });
+
+  protected formCreateCourse = form(this.modelForm, (model) => {
+    required(model.nome, { message: 'Enter the course name.' });
+    required(model.cargaHoraria, { message: 'Enter the course hours.' });
+    required(model.dataConclusao, { message: 'Enter the completion date.' });
+
+    minLength(model.nome, 3, { message: 'Course name must have at least 3 characters' });
+    minLength(model.descricao, 3, { message: 'Description name must have at least 3 characters' });
+
+    validate(model.cargaHoraria, (c) => {
+      if (c.value() <= 1) {
+        return {
+          kind: 'cargaHoraria',
+          message: 'Hour must be greater then 1.',
+        };
+      }
+      return null;
+    });
+  });
 
   constructor(
     private readonly servicoCadastroCurso: serviceCreateCourse,
-    private createGroup: FormBuilder,
-    private changeDetector: ChangeDetectorRef,
     private router: Router,
+    private provideUser: ProvideUser,
   ) {
-    this.formulario = createGroup.group({
-      nome: ['', Validators.required],
-      cargaHoraria: ['', Validators.required],
-      descricao: [''],
-      dataConclusao: ['', Validators.required],
-    });
+    if (!provideUser.isLoggedIn()) {
+      router.navigate(['/login']);
+    }
   }
 
-  protected sendCreateCourse() {
-    if (this.formulario.invalid) {
-      this.mensagemErro = 'All fields are required!';
-      return;
-    }
-    const dados = this.formulario.value;
+  protected sendCreateCourse(event: SubmitEvent) {
+    event.preventDefault();
+
+    if (!this.formCreateCourse().valid) return;
+
+    const dados = this.modelForm();
 
     this.servicoCadastroCurso.enviarMensagem(dados).subscribe({
       next: (resposta) => {
@@ -47,7 +75,6 @@ export class CreateCourse {
         const mensagem = extrairMensagemErro(erro);
         console.log(mensagem);
         this.mensagemErro = mensagem;
-        this.changeDetector.markForCheck();
       },
     });
   }
