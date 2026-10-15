@@ -16,8 +16,18 @@
         </p>
       </div>
 
+      @if (mensagemErro) {
+        <!-- Exibição de Erro -->
+        <div
+          class="alert alert-danger bg-danger bg-opacity-10 border border-danger border-opacity-25 text-danger rounded-3 p-2 small mb-0 d-flex align-items-center gap-2"
+        >
+          <i class="bi bi-exclamation-triangle-fill"></i>
+          <span>{{ mensagemErro }}</span>
+        </div>
+      }
+
       <!-- Formulário -->
-      <form [formGroup]="formulario" (ngSubmit)="sendCreateCourse()">
+      <form (submit)="sendCreateCourse($event)">
         <!-- Course Name -->
         <div class="form-group mb-3">
           <label for="courseName" class="form-label text-light fw-medium mb-1">Course Name</label>
@@ -26,22 +36,32 @@
               type="text"
               class="form-control rounded-3 border border-primary border-opacity-50 ps-2"
               id="courseName"
-              placeholder=""
-              required
-              formControlName="nome"
+              [formField]="formCreateCourse.nome"
             />
           </div>
+          @if (formCreateCourse.nome().touched() && formCreateCourse.nome().invalid()) {
+            <p class="fw-medium text-danger m-0">
+              {{ formCreateCourse.nome().errors()[0].message }}
+            </p>
+          }
         </div>
 
         <!-- Description -->
         <div class="form-group mb-3">
-          <label for="description" class="form-label text-light fw-medium mb-1">Description</label>
+          <label for="description" class="form-label text-light fw-medium mb-1"
+            >Description <span class="text-primary">- Optional</span></label
+          >
           <textarea
             class="form-control rounded-3 border-0"
             id="description"
             rows="3"
-            formControlName="descricao"
+            [formField]="formCreateCourse.descricao"
           ></textarea>
+          @if (formCreateCourse.descricao().touched() && formCreateCourse.descricao().invalid()) {
+            <p class="fw-medium text-danger m-0">
+              {{ formCreateCourse.descricao().errors()[0].message }}
+            </p>
+          }
         </div>
 
         <!-- Row: Course Hours & Completion Date -->
@@ -56,12 +76,16 @@
                 type="number"
                 class="form-control rounded-3 border border-primary border-opacity-50 ps-3"
                 id="courseHours"
-                value="1"
-                min="1"
-                required
-                formControlName="cargaHoraria"
+                [formField]="formCreateCourse.cargaHoraria"
               />
             </div>
+            @if (
+              formCreateCourse.cargaHoraria().touched() && formCreateCourse.cargaHoraria().invalid()
+            ) {
+              <p class="fw-medium text-danger m-0">
+                {{ formCreateCourse.cargaHoraria().errors()[0].message }}
+              </p>
+            }
           </div>
 
           <!-- Completion Date -->
@@ -75,17 +99,19 @@
                 class="form-control rounded-3 border-0 ps-3 text-secondary"
                 id="completionDate"
                 placeholder="dd/mm/aaaa"
-                required
-                formControlName="dataConclusao"
+                [formField]="formCreateCourse.dataConclusao"
               />
             </div>
+            @if (
+              formCreateCourse.dataConclusao().touched() &&
+              formCreateCourse.dataConclusao().invalid()
+            ) {
+              <p class="fw-medium text-danger m-0">
+                {{ formCreateCourse.dataConclusao().errors()[0].message }}
+              </p>
+            }
           </div>
         </div>
-        @if (mensagemErro) {
-          <div>
-            <p class="text-danger text-center fw-bold">{{ mensagemErro }}</p>
-          </div>
-        }
         <!-- Botões -->
         <div class="row g-2 pt-2">
           <div class="col-6">
