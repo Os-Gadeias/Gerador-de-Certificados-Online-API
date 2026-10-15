@@ -1,11 +1,11 @@
-import { ChangeDetectorRef, Component, ElementRef, signal, viewChild } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { Footer } from '../../components/footer/footer';
 import { Router, RouterLink } from '@angular/router';
 import { serviceLogin } from '../../services/login/serviceLogin';
 import { HttpErrorResponse } from '@angular/common/http';
 import { extrairMensagemErro } from '../../services/api/apiError/apiError';
 import { ProvideUser } from '../../auth/provideUser';
-import { form, FormField, pattern, required } from '@angular/forms/signals';
+import { form, FormField, required } from '@angular/forms/signals';
 
 interface LoginFormModel {
   readonly email: string;
@@ -28,7 +28,6 @@ export class Login {
   constructor(
     private loginService: serviceLogin,
     private router: Router,
-    private changeDetector: ChangeDetectorRef,
     private provideUser: ProvideUser,
   ) {}
   sendUserLogin(event: SubmitEvent): void {
@@ -48,7 +47,6 @@ export class Login {
           !resposta.username.trim()
         ) {
           this.mensagemErro = 'A API retornou dados de autenticação inválidos.';
-          this.changeDetector.markForCheck();
           return;
         }
 
@@ -61,7 +59,6 @@ export class Login {
         const mensagem = extrairMensagemErro(erro);
         console.log(mensagem);
         this.mensagemErro = mensagem;
-        this.changeDetector.markForCheck();
         return;
       },
     });
