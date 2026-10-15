@@ -1,9 +1,8 @@
 <section class="authSection bg-lighterDark d-flex align-items-center justify-content-center p-4">
   <div class="container d-flex align-items-center justify-content-center">
     <form
-      class="formularioInput certificado border border-primary border-opacity-50 p-4 p-md-5 rounded-4 bg-dark text-light d-flex flex-column gap-4 w-100 shadow-lg"
-      [formGroup]="formularioLogin"
-      (ngSubmit)="sendUserLogin()"
+      class="formularioInput certificado border border-primary border-opacity-50 p-4 p-md-5 rounded-4 bg-dark text-light d-flex flex-column gap-3 w-100 shadow-lg"
+      (submit)="sendUserLogin($event)"
     >
       <!-- Cabeçalho -->
       <div class="d-flex flex-column align-items-center text-center">
@@ -12,6 +11,15 @@
         <div class="w-25 border-bottom border-primary border-2 opacity-75"></div>
       </div>
 
+      @if (mensagemErro) {
+        <!-- Exibição de Erro -->
+        <div
+          class="alert alert-danger bg-danger bg-opacity-10 border border-danger border-opacity-25 text-danger rounded-3 p-2 small mb-0 d-flex align-items-center gap-2"
+        >
+          <i class="bi bi-exclamation-triangle-fill"></i>
+          <span>exemplo erro</span>
+        </div>
+      }
       <!-- Campo de E-mail -->
       <div class="form-group">
         <label for="email" class="form-label text-light fw-medium mb-1">Email Address</label>
@@ -22,13 +30,15 @@
             id="email"
             aria-describedby="emailHelp"
             placeholder="Enter your email"
-            formControlName="email"
-            required
+            [formField]="formLogin.email"
           />
         </div>
         <small id="emailHelp" class="form-text text-secondary opacity-75 mt-1 d-block">
           We'll never share your email with anyone else.
         </small>
+        @if (formLogin.email().touched() && formLogin.email().invalid()) {
+          <p class="fw-medium text-danger m-0">{{ formLogin.email().errors()[0].message }}</p>
+        }
       </div>
 
       <!-- Campo de Senha -->
@@ -42,21 +52,15 @@
             class="form-control rounded-3 border border-primary border-opacity-50 ps-2"
             id="exampleInputPassword1"
             placeholder="Enter your password"
-            formControlName="senha"
-            required
+            [formField]="formLogin.senha"
           />
         </div>
+        @if (formLogin.senha().touched() && formLogin.senha().invalid()) {
+          <p class="mt-1 fw-medium text-danger m-0">
+            {{ formLogin.senha().errors()[0].message }}
+          </p>
+        }
       </div>
-
-      <!-- Exibição de Erro -->
-      @if (mensagemErro) {
-        <div
-          class="alert alert-danger bg-danger bg-opacity-10 border border-danger border-opacity-25 text-danger rounded-3 p-2 small mb-0 d-flex align-items-center gap-2"
-        >
-          <i class="bi bi-exclamation-triangle-fill"></i>
-          <span>{{ mensagemErro }}</span>
-        </div>
-      }
 
       <!-- Botão de Submissão -->
       <button
