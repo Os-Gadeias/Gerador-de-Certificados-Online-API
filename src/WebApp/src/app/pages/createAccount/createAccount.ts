@@ -1,43 +1,48 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { Footer } from '../../components/footer/footer';
 import { Router, RouterLink } from '@angular/router';
-
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ServiceCreateUser } from '../../services/createUser/serviceCreateUser';
 import { HttpErrorResponse } from '@angular/common/http';
 import { extrairMensagemErro } from '../../services/api/apiError/apiError';
 import { ProvideUser } from '../../auth/provideUser';
+import { email, form, FormField, minLength, pattern, required } from '@angular/forms/signals';
+
+interface CreateAccountForm {
+  email: string;
+  senha: string;
+}
 
 @Component({
   selector: 'app-createAccount',
   standalone: true,
-  imports: [Footer, RouterLink, ReactiveFormsModule],
+  imports: [Footer, RouterLink, FormField],
   templateUrl: './createAccount.html',
 })
 export class createAccount {
   mensagemErro!: string;
 
-  public formulario!: FormGroup;
+  protected readonly formModel = signal<CreateAccountForm>({ email: '', senha: '' });
+  protected readonly formCreateAccount = form(this.formModel, (model) => {
+    required(model.email, { message: 'Enter your email.' });
+    email(model.email, { message: 'Enter a valid email.' });
+    required(model.senha, { message: 'Enter your password.' });
+    minLength(model.senha, 8, { message: 'The password must have at least 8 characters' });
+    pattern(model.senha, /(?=.*\d)(?=.*[^a-zA-Z0-9]).+/, {
+      message: 'Include at least one number and special characters',
+    });
+  });
+
   constructor(
-    private createUser: FormBuilder,
     private serviceCreateUser: ServiceCreateUser,
-    private changeDetector: ChangeDetectorRef,
     private router: Router,
     private provideUser: ProvideUser,
-  ) {
-    this.formulario = createUser.group({
-      email: ['', Validators.required],
-      senha: ['', Validators.required],
-    });
-  }
-  sendCreateUser(): void {
-    if (this.formulario.invalid) {
-      this.mensagemErro = 'The email and password fields are required!';
-      return;
-    }
-    const dados = this.formulario.value;
+  ) {}
+  sendCreateUser(event: SubmitEvent): void {
+    event.preventDefault();
 
-    this.serviceCreateUser.enviarMensagem(dados).subscribe({
+    const data = this.formModel();
+
+    this.serviceCreateUser.enviarMensagem(data).subscribe({
       next: (resposta) => {
         if (
           !resposta ||
@@ -47,7 +52,6 @@ export class createAccount {
           !resposta.nomeUsuario.trim()
         ) {
           this.mensagemErro = 'A API retornou dados de autenticação inválidos.';
-          this.changeDetector.markForCheck();
           return;
         }
 
@@ -60,7 +64,6 @@ export class createAccount {
         const mensagem = extrairMensagemErro(erro);
         console.log(mensagem);
         this.mensagemErro = mensagem;
-        this.changeDetector.markForCheck();
       },
     });
   }

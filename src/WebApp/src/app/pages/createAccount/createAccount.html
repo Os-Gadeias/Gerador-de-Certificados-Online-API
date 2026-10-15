@@ -1,9 +1,8 @@
 <section class="authSection bg-lighterDark d-flex align-items-center justify-content-center p-4">
   <div class="container d-flex align-items-center justify-content-center">
     <form
-      class="formularioInput certificado border border-primary border-opacity-50 p-4 p-md-5 rounded-4 bg-dark text-light d-flex flex-column gap-4 w-100 shadow-lg"
-      [formGroup]="formulario"
-      (ngSubmit)="sendCreateUser()"
+      class="formularioInput certificado border border-primary border-opacity-50 p-4 p-md-5 rounded-4 bg-dark text-light d-flex flex-column gap-3 w-100 shadow-lg"
+      (submit)="sendCreateUser($event)"
     >
       <!-- Cabeçalho -->
       <div class="d-flex flex-column align-items-center text-center">
@@ -11,6 +10,16 @@
         <p class="text-secondary small mb-2">Join us and start generating certificates easily</p>
         <div class="w-25 border-bottom border-primary border-2 opacity-75"></div>
       </div>
+      <!-- Exibição de Erro -->
+
+      @if (mensagemErro) {
+        <div
+          class="alert alert-danger bg-danger bg-opacity-10 border border-danger border-opacity-25 text-danger rounded-3 p-2 small mb-0 d-flex align-items-center gap-2"
+        >
+          <i class="bi bi-exclamation-triangle-fill"></i>
+          <span>{{ mensagemErro }}</span>
+        </div>
+      }
 
       <!-- Campo de E-mail -->
       <div class="form-group">
@@ -22,10 +31,14 @@
             id="email"
             aria-describedby="emailHelp"
             placeholder="Enter your email"
-            formControlName="email"
-            required
+            [formField]="formCreateAccount.email"
           />
         </div>
+        @if (formCreateAccount.email().touched() && formCreateAccount.email().invalid()) {
+          <p class="fw-medium text-danger m-0">
+            {{ formCreateAccount.email().errors()[0].message }}
+          </p>
+        }
       </div>
 
       <!-- Campo de Senha -->
@@ -37,21 +50,15 @@
             class="form-control rounded-3 border border-primary border-opacity-50 ps-2"
             id="password"
             placeholder="Create a password"
-            formControlName="senha"
-            required
+            [formField]="formCreateAccount.senha"
           />
         </div>
+        @if (formCreateAccount.senha().touched() && formCreateAccount.senha().invalid()) {
+          <p class="fw-medium text-danger m-0">
+            {{ formCreateAccount.senha().errors()[0].message }}
+          </p>
+        }
       </div>
-
-      <!-- Exibição de Erro -->
-      @if (mensagemErro) {
-        <div
-          class="alert alert-danger bg-danger bg-opacity-10 border border-danger border-opacity-25 text-danger rounded-3 p-2 small mb-0 d-flex align-items-center gap-2"
-        >
-          <i class="bi bi-exclamation-triangle-fill"></i>
-          <span>{{ mensagemErro }}</span>
-        </div>
-      }
 
       <!-- Botão de Submissão -->
       <button
