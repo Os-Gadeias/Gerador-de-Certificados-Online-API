@@ -1,0 +1,92 @@
+<section
+  id="certificade"
+  class="smallerSection bg-lighterDark align-items-center justify-content-center p-4 p-md-5"
+>
+  <div class="container py-4">
+    <div class="row g-4 align-items-center justify-content-between">
+      <!-- Coluna Esquerda: Título, Descrição e Botão -->
+      <div class="col-12 col-lg-5 text-start">
+        <span
+          class="badge bg-danger bg-opacity-20 text-primary px-3 py-2 rounded-pill fw-semibold mb-3 fs-6 text-light"
+        >
+          <i class="bi bi-person me-1"></i> Students
+        </span>
+        <h2 class="fw-bold text-light display-5 mb-3">
+          Select your <span class="text-danger">Courses</span>
+        </h2>
+        <p class="text-secondary lead mb-4">
+          And link your students to the courses to generete their certificades and download them
+          quickly!
+        </p>
+        <form action="" class="form-group d-flex flex-column gap-1">
+          <label for="courseName" class="form-label text-light fw-medium mb-1"
+            >Select your Course</label
+          >
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control rounded-3 border border-primary border-opacity-50 ps-2"
+              id="courseName"
+            />
+          </div>
+          <label for="courseName" class="form-label text-light fw-medium mb-1"
+            >Enter the Student Name</label
+          >
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control rounded-3 border border-primary border-opacity-50 ps-2"
+              id="courseName"
+            />
+          </div>
+          <a
+            routerLink=""
+            class="btn btn-danger btn-lg rounded-3 px-4 py-2 mt-2 fw-bold text-white shadow d-inline-flex align-items-center gap-2"
+          >
+            <i class="bi bi-plus-circle fs-5"></i> Enroll Student
+          </a>
+        </form>
+      </div>
+      <div class="col-12 col-lg-6">
+        <!-- Coluna Direita: Listagem de Cursos (Estado Vazio) -->
+        <div
+          class="p-4 p-md-5 bg-dark rounded-4 shadow-lg border border-secondary border-opacity-10 min-vh-50 d-flex flex-column justify-content-center"
+        >
+          <!-- Lista / Contêiner de Cursos -->
+          <div id="courseListContainer" class="d-flex flex-column gap-3">
+            <!-- Estado Vazio (Mensagem Padrão) -->
+            <div class="text-center py-5">
+              <div class="mb-3">
+                <i class="bi bi-person text-secondary display-1 opacity-50"></i>
+              </div>
+              <h4 class="text-light fw-semibold mb-2">No Students Enrolled</h4>
+              <p class="text-secondary small mb-0 mx-auto" style="max-width: 320px">
+                You haven't added any Students yet. Click the button on the right to enroll.
+              </p>
+            </div>
+
+            <!-- Exemplo de como ficará o item na lista quando retornado pela API (Comentado) -->
+            <!-- <div class="card certificado bg-lighterDark border-0 rounded-3 p-3 text-light">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <h5 class="fw-bold text-light mb-1">Full Stack Web Development</h5>
+                  <p class="text-secondary small mb-2">
+                    Acquiring practical and theoretical knowledge in modern web technologies.
+                  </p>
+                  <div class="d-flex gap-3 text-secondary small">
+                    <span><i class="bi bi-clock me-1 text-info"></i> 120h</span>
+                    <span><i class="bi bi-calendar-check me-1 text-warning"></i> Dec 15, 2026</span>
+                  </div>
+                </div>
+                <div class="d-flex gap-2">
+                  <button class="btn btn-sm btn-outline-light"><i class="bi bi-pencil"></i></button>
+                  <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                </div>
+              </div>
+            </div> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
