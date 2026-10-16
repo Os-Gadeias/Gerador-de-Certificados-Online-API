@@ -5,11 +5,20 @@ import { ServiceCreateUser } from '../../services/createUser/serviceCreateUser';
 import { HttpErrorResponse } from '@angular/common/http';
 import { extrairMensagemErro } from '../../services/api/apiError/apiError';
 import { ProvideUser } from '../../auth/provideUser';
-import { email, form, FormField, minLength, pattern, required } from '@angular/forms/signals';
+import {
+  email,
+  form,
+  FormField,
+  minLength,
+  pattern,
+  required,
+  validate,
+} from '@angular/forms/signals';
 
 interface CreateAccountForm {
   email: string;
   senha: string;
+  senhaConfirmada: string;
 }
 
 @Component({
@@ -21,14 +30,31 @@ interface CreateAccountForm {
 export class createAccount {
   mensagemErro!: string;
 
-  protected readonly formModel = signal<CreateAccountForm>({ email: '', senha: '' });
+  protected readonly formModel = signal<CreateAccountForm>({
+    email: '',
+    senha: '',
+    senhaConfirmada: '',
+  });
   protected readonly formCreateAccount = form(this.formModel, (model) => {
     required(model.email, { message: 'Enter your email.' });
-    email(model.email, { message: 'Enter a valid email.' });
     required(model.senha, { message: 'Enter your password.' });
+    required(model.senhaConfirmada, { message: 'Enter your password.' });
+    email(model.email, { message: 'Enter a valid email.' });
     minLength(model.senha, 8, { message: 'The password must have at least 8 characters' });
     pattern(model.senha, /(?=.*\d)(?=.*[^a-zA-Z0-9]).+/, {
       message: 'Include at least one number and special characters',
+    });
+    validate(model.senhaConfirmada, ({ value, valueOf }) => {
+      const senha = valueOf(model.senha);
+      const senhaConfirmada = value();
+
+      if (senha !== senhaConfirmada) {
+        return {
+          kind: 'senhaConfirmada',
+          message: 'The passwords dont match!',
+        };
+      }
+      return null;
     });
   });
 
