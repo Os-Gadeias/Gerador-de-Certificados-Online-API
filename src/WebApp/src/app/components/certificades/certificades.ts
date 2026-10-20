@@ -71,6 +71,10 @@ export class Certificades {
     this.selectedCourseId.set(courseId);
     this.students.set([]);
 
+    this.loadStudents(courseId);
+  }
+
+  private loadStudents(courseId: string) {
     this.listStudents.enviarMensagem(courseId).subscribe({
       next: (students) => {
         if (this.selectedCourseId() === courseId) {
@@ -101,6 +105,7 @@ export class Certificades {
     this.enrollStudent.enviarMensagem(courseId, studentsList).subscribe({
       next: () => {
         this.success.set(true);
+        this.loadStudents(courseId);
       },
       error: (err: HttpErrorResponse) => {
         this.success.set(false);
