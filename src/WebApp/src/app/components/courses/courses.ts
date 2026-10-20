@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, inject, Signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ServiceListCourses } from '../../services/course/listCourses/serviceListCourses';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -36,7 +36,6 @@ export class Courses {
   readonly provideUser = inject(ProvideUser);
   readonly listCourses = inject(ServiceListCourses);
   readonly serviceDelete = inject(ServiceDeleteCourse);
-  private changeDetector = inject(ChangeDetectorRef);
   protected readonly courses = toSignal(
     this.listCourses
       .enviarMensagem()
