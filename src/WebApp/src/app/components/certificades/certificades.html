@@ -19,24 +19,41 @@
           quickly!
         </p>
         <form action="" class="form-group d-flex flex-column gap-1">
-          <label for="courseName" class="form-label text-light fw-medium mb-1"
+          <label for="course" class="form-label text-light fw-medium mb-1"
             >Select your Course</label
           >
           <div class="input-group">
-            <input
+            <select
               type="text"
-              class="form-control rounded-3 border border-primary border-opacity-50 ps-2"
-              id="courseName"
-            />
+              class="form-control rounded-3 border border-primary border-opacity-50 ps-2 text-secondary"
+              style="background-color: #2a1941"
+              id="course"
+            >
+              <option
+                class="form-select rounded-3 border border-primary border-opacity-50 ps-2"
+                value=""
+              >
+                Select a Course
+              </option>
+              @for (item of courses(); track item.id) {
+                <option
+                  name="course"
+                  [id]="item.id"
+                  class="form-select rounded-3 border border-primary border-opacity-50 ps-2"
+                >
+                  {{ item.name }}
+                </option>
+              }
+            </select>
           </div>
-          <label for="courseName" class="form-label text-light fw-medium mb-1"
+          <label for="student" class="form-label text-light fw-medium mb-1"
             >Enter the Student Name</label
           >
           <div class="input-group">
             <input
               type="text"
               class="form-control rounded-3 border border-primary border-opacity-50 ps-2"
-              id="courseName"
+              id="student"
             />
           </div>
           <a
