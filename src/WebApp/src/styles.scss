@@ -87,7 +87,8 @@ html {
   scroll-behavior: smooth;
 }
 
-.courses-list {
+.courses-list,
+.students-list {
   max-height: 60vh;
   overflow-y: auto;
   overflow-x: hidden;
