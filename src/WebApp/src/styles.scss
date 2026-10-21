@@ -89,7 +89,7 @@ html {
 
 .courses-list,
 .students-list {
-  max-height: 60vh;
+  max-height: 42.5vh;
   overflow-y: auto;
   overflow-x: hidden;
 
@@ -136,4 +136,8 @@ html {
   }
   background-color: $roxo-escuro;
   color: $secundaria;
+}
+.form-group textarea::placeholder {
+  color: $branco;
+  opacity: 1;
 }
