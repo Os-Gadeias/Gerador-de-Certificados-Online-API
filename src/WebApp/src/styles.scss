@@ -87,7 +87,8 @@ html {
   scroll-behavior: smooth;
 }
 
-.courses-list {
+.courses-list,
+.students-list {
   max-height: 60vh;
   overflow-y: auto;
   overflow-x: hidden;
@@ -121,4 +122,18 @@ html {
       background: $magenta;
     }
   }
+}
+
+.select {
+  background-color: $roxo-escuro;
+  color: $secundaria;
+}
+
+.form-select {
+  &:focus {
+    border-color: $primaria;
+    box-shadow: 0 0 0 0.25rem rgba(107, 44, 187, 0.25);
+  }
+  background-color: $roxo-escuro;
+  color: $secundaria;
 }

@@ -1,0 +1,116 @@
+<section
+  id="certificade"
+  class="smallerSection bg-lighterDark align-items-center justify-content-center p-4 p-md-5"
+>
+  <div class="container py-4">
+    <div class="row g-4 align-items-center justify-content-between">
+      <!-- Coluna Esquerda: Título, Descrição e Botão -->
+      <div class="col-12 col-lg-5 text-start">
+        <span
+          class="badge bg-danger bg-opacity-20 text-primary px-3 py-2 rounded-pill fw-semibold mb-3 fs-6 text-light"
+        >
+          <i class="bi bi-person me-1"></i> Students
+        </span>
+        <h2 class="fw-bold text-light display-5 mb-3">
+          Select your <span class="text-danger">Courses</span>
+        </h2>
+        <p class="text-secondary lead mb-4">
+          And link your students to the courses to generete their certificades and download them
+          quickly!
+        </p>
+        <form action="" class="form-group d-flex flex-column gap-1" (submit)="EnrolStudent($event)">
+          <label for="course" class="form-label text-light fw-medium mb-1"
+            >Select your Course</label
+          >
+          <div class="input-group">
+            <select
+              type="text"
+              class="form-control rounded-3 border border-primary border-opacity-50 ps-2 text-secondary"
+              style="background-color: #2a1941"
+              id="course"
+              (change)="onCourseChange($event)"
+              [formField]="formEnrolStudents.cursoId"
+            >
+              <option
+                class="form-select rounded-3 border border-primary border-opacity-50 ps-2"
+                value=""
+              >
+                Select a Course
+              </option>
+              @for (item of courses(); track item.id) {
+                <option
+                  name="course"
+                  [value]="item.id"
+                  class="form-select rounded-3 border border-primary border-opacity-50 ps-2"
+                >
+                  {{ item.name }}
+                </option>
+              }
+            </select>
+          </div>
+          <label for="student" class="form-label text-light fw-medium mb-1"
+            >Enter the Student Name</label
+          >
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control rounded-3 border border-primary border-opacity-50 ps-2"
+              id="student"
+              [formField]="formEnrolStudents.students"
+              placeholder="Ex: James, John, Mary"
+            />
+          </div>
+          <p class="m-0">Enter a list of students names!</p>
+          <button
+            type="submit"
+            class="btn btn-danger btn-lg rounded-3 px-4 py-2 mt-2 fw-bold text-white shadow d-inline-flex align-items-center gap-2"
+          >
+            <i class="bi bi-plus-circle fs-5"></i> Enroll Student
+          </button>
+        </form>
+      </div>
+      <div class="col-12 col-lg-6">
+        <!-- Coluna Direita: Listagem de Cursos (Estado Vazio) -->
+        <div
+          class="p-4 p-md-5 bg-dark rounded-4 shadow-lg border border-secondary border-opacity-10 min-vh-50 d-flex flex-column justify-content-center"
+        >
+          <!-- Lista / Contêiner de Cursos -->
+          <div id="courseListContainer" class="d-flex flex-column gap-3">
+            <!-- Estado Vazio (Mensagem Padrão) -->
+            @if (students().length === 0) {
+              <div class="text-center py-5">
+                <div class="mb-3">
+                  <i class="bi bi-person text-secondary display-1 opacity-50"></i>
+                </div>
+                <h4 class="text-light fw-semibold mb-2">Select a Course</h4>
+                <p class="text-secondary small mb-0 mx-auto" style="max-width: 320px">
+                  To view all your students!
+                </p>
+              </div>
+            } @else {
+              <div class="students-list">
+                @for (item of students(); track item.name) {
+                  <div class="card certificado bg-lighterDark border-0 rounded-3 p-3 text-light">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div>
+                        <h5 class="fw-bold text-light mb-1">
+                          <i class="bi bi-person me-2"></i>{{ item.name }}
+                        </h5>
+                        <span>Status: {{ item.status }}</span>
+                      </div>
+                      <div class="d-flex gap-2">
+                        <button class="btn btn-sm btn-outline-danger">
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
