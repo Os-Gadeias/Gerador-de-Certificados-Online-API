@@ -5,11 +5,12 @@ import { Navbar } from '../../components/navbar/navbar';
 import { Footer } from '../../components/footer/footer';
 import { Card } from '../../components/card/card';
 import { Certificades } from '../../components/certificades/certificades';
+import { Download } from '../../components/download/download';
 
 @Component({
   selector: 'app-main-page',
   standalone: true,
-  imports: [Navbar, Home, Footer, Card, Courses, Certificades],
+  imports: [Navbar, Home, Footer, Card, Courses, Certificades, Download],
   templateUrl: './mainPage.html',
 })
 export class MainPage {}

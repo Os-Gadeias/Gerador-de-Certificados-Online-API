@@ -1,0 +1,471 @@
+
+<section
+  id="downloads"
+  class="smallerSection bg-lighterDark align-items-center justify-content-center p-4 p-md-5"
+>
+  <div class="container py-4">
+
+    <!-- Cabeçalho da seção -->
+    <div class="row mb-5">
+      <div class="col-12 col-lg-9">
+
+        <span
+          class="badge bg-primary bg-opacity-25 text-light rounded-pill px-3 py-2 mb-3 fs-6"
+        >
+          <i class="bi bi-cloud-arrow-down me-2"></i>
+          Certificate Center
+        </span>
+
+        <h2 class="display-5 fw-bold text-light mb-3">
+          Download your
+          <span class="text-primary">Certificates</span>
+        </h2>
+
+        <p class="text-secondary lead mb-0">
+          Select a course to view its students, check certificate
+          generation status, and download your certificates.
+        </p>
+
+      </div>
+    </div>
+
+    <div class="row g-4 align-items-stretch">
+
+      <!-- COLUNA ESQUERDA: LISTAGEM DE CURSOS -->
+      <div class="col-12 col-lg-5 d-flex">
+
+        <div
+          class="bg-dark border border-primary border-opacity-25 rounded-4 p-4 p-xl-5 shadow-lg w-100"
+        >
+
+          <!-- Cabeçalho da lista -->
+          <div class="d-flex align-items-center justify-content-between gap-3 mb-3">
+
+            <div>
+              <h3 class="h5 fw-bold text-light mb-2">
+                <i class="bi bi-journals text-primary me-2"></i>
+                Your Courses
+              </h3>
+
+              <p class="text-secondary small mb-0">
+                Choose a course to view its certificates
+              </p>
+            </div>
+
+            <span
+              class="badge bg-primary bg-opacity-25 text-light rounded-pill px-3 py-2"
+            >
+              3
+            </span>
+
+          </div>
+
+          <hr class="border-primary opacity-25 mb-4" />
+
+          <!-- Lista de cursos: dados estáticos -->
+          <!-- TODO: Substituir pelos cursos retornados pela API -->
+          <div class="courses-list">
+
+            <!-- CURSO 1: CERTIFICADOS DISPONÍVEIS -->
+            <button
+              type="button"
+              class="btn bg-lighterDark border rounded-3 p-3 w-100 text-start"
+              [class.border-danger]="selectedCourse() === 'angular'"
+              [class.border-primary]="selectedCourse() !== 'angular'"
+              (click)="selectCourse('angular')"
+              [attr.aria-pressed]="selectedCourse() === 'angular'"
+            >
+              <div class="d-flex align-items-center gap-3">
+
+                <div class="bg-primary bg-opacity-25 rounded-3 p-3">
+                  <i class="bi bi-book text-danger fs-4"></i>
+                </div>
+
+                <div class="flex-grow-1 overflow-hidden">
+                  <h5 class="fw-semibold text-light mb-1">
+                    Angular Fundamentals
+                  </h5>
+
+                  <small class="text-secondary">
+                    <i class="bi bi-people me-1"></i>
+                    3 Students
+                  </small>
+                </div>
+
+                <i class="bi bi-chevron-right text-danger"></i>
+
+              </div>
+            </button>
+
+            <!-- CURSO 2: CERTIFICADOS EM PROCESSAMENTO -->
+            <button
+              type="button"
+              class="btn bg-lighterDark border rounded-3 p-3 w-100 text-start"
+              [class.border-danger]="selectedCourse() === 'dotnet'"
+              [class.border-primary]="selectedCourse() !== 'dotnet'"
+              (click)="selectCourse('dotnet')"
+              [attr.aria-pressed]="selectedCourse() === 'dotnet'"
+            >
+              <div class="d-flex align-items-center gap-3">
+
+                <div class="bg-primary bg-opacity-25 rounded-3 p-3">
+                  <i class="bi bi-book text-danger fs-4"></i>
+                </div>
+
+                <div class="flex-grow-1 overflow-hidden">
+                  <h5 class="fw-semibold text-light mb-1">
+                    ASP.NET Core Web API
+                  </h5>
+
+                  <small class="text-secondary">
+                    <i class="bi bi-people me-1"></i>
+                    2 Students
+                  </small>
+                </div>
+
+                <i class="bi bi-chevron-right text-danger"></i>
+
+              </div>
+            </button>
+
+            <!-- CURSO 3: SEM CERTIFICADOS -->
+            <button
+              type="button"
+              class="btn bg-lighterDark border rounded-3 p-3 w-100 text-start"
+              [class.border-danger]="selectedCourse() === 'database'"
+              [class.border-primary]="selectedCourse() !== 'database'"
+              (click)="selectCourse('database')"
+              [attr.aria-pressed]="selectedCourse() === 'database'"
+            >
+              <div class="d-flex align-items-center gap-3">
+
+                <div class="bg-primary bg-opacity-25 rounded-3 p-3">
+                  <i class="bi bi-book text-danger fs-4"></i>
+                </div>
+
+                <div class="flex-grow-1 overflow-hidden">
+                  <h5 class="fw-semibold text-light mb-1">
+                    Database Essentials
+                  </h5>
+
+                  <small class="text-secondary">
+                    <i class="bi bi-people me-1"></i>
+                    0 Students
+                  </small>
+                </div>
+
+                <i class="bi bi-chevron-right text-danger"></i>
+
+              </div>
+            </button>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- COLUNA DIREITA: CERTIFICADOS DO CURSO -->
+      <div class="col-12 col-lg-7 d-flex">
+
+        <div
+          class="bg-dark border border-secondary border-opacity-10 rounded-4 p-4 p-xl-5 shadow-lg w-100 d-flex flex-column"
+        >
+
+          <!-- Cabeçalho do painel -->
+          <div class="d-flex align-items-center justify-content-between gap-3 mb-3">
+
+            <div>
+              <h3 class="h5 fw-bold text-light mb-2">
+                <i class="bi bi-file-earmark-check text-danger me-2"></i>
+                Certificate Details
+              </h3>
+
+              <p class="text-secondary small mb-0">
+                View the certificate status for each student
+              </p>
+            </div>
+
+            <span
+              class="badge bg-primary bg-opacity-25 text-light rounded-pill px-3 py-2"
+            >
+              <i class="bi bi-file-earmark-pdf me-1"></i>
+              {{ selectedCourse() === 'angular' ? 3 : selectedCourse() === 'dotnet' ? 2 : 0 }}
+            </span>
+
+          </div>
+
+          <hr class="border-primary opacity-25 mb-4" />
+
+          <!-- Área de conteúdo -->
+          <div class="flex-grow-1">
+
+            <!-- ESTADO INICIAL: NENHUM CURSO SELECIONADO -->
+            @if (selectedCourse() === null) {
+
+              <div class="text-center py-5 my-4">
+
+                <div class="mb-4">
+                  <i class="bi bi-file-earmark-arrow-down display-1 text-secondary opacity-50"></i>
+                </div>
+
+                <h4 class="text-light fw-semibold mb-3">
+                  Select a Course
+                </h4>
+
+                <p class="text-secondary">
+                  Choose a course from the list to view
+                  its students and available certificates.
+                </p>
+
+              </div>
+
+            }
+
+            <!-- CURSO ANGULAR: CERTIFICADOS GERADOS -->
+            @else if (selectedCourse() === 'angular') {
+
+              <!-- Informações do curso selecionado -->
+              <div class="mb-4">
+
+                <h4 class="h5 fw-bold text-light mb-2">
+                  Angular Fundamentals
+                </h4>
+
+                <span
+                  class="badge bg-success bg-opacity-25 text-success rounded-pill px-3 py-2"
+                >
+                  <i class="bi bi-check-circle me-1"></i>
+                  Certificates Ready
+                </span>
+
+              </div>
+
+              <!-- Lista estática de certificados -->
+              <!-- TODO: Carregar alunos e status pela API -->
+              <div class="students-list">
+
+                <!-- ALUNO 1 -->
+                <div
+                  class="bg-lighterDark border border-primary border-opacity-25 rounded-3 p-3"
+                >
+                  <div class="d-flex align-items-center gap-3">
+
+                    <div class="bg-primary bg-opacity-25 rounded-circle p-3">
+                      <i class="bi bi-person-fill text-danger fs-5"></i>
+                    </div>
+
+                    <div class="flex-grow-1">
+                      <h5 class="fw-semibold text-light mb-1">
+                        James Anderson
+                      </h5>
+
+                      <small class="text-success">
+                        <i class="bi bi-check-circle-fill me-1"></i>
+                        Generated
+                      </small>
+                    </div>
+
+                    <i class="bi bi-file-earmark-check text-success fs-4"></i>
+
+                  </div>
+                </div>
+
+                <!-- ALUNO 2 -->
+                <div
+                  class="bg-lighterDark border border-primary border-opacity-25 rounded-3 p-3"
+                >
+                  <div class="d-flex align-items-center gap-3">
+
+                    <div class="bg-primary bg-opacity-25 rounded-circle p-3">
+                      <i class="bi bi-person-fill text-danger fs-5"></i>
+                    </div>
+
+                    <div class="flex-grow-1">
+                      <h5 class="fw-semibold text-light mb-1">
+                        Mary Johnson
+                      </h5>
+
+                      <small class="text-success">
+                        <i class="bi bi-check-circle-fill me-1"></i>
+                        Generated
+                      </small>
+                    </div>
+
+                    <i class="bi bi-file-earmark-check text-success fs-4"></i>
+
+                  </div>
+                </div>
+
+                <!-- ALUNO 3 -->
+                <div
+                  class="bg-lighterDark border border-primary border-opacity-25 rounded-3 p-3"
+                >
+                  <div class="d-flex align-items-center gap-3">
+
+                    <div class="bg-primary bg-opacity-25 rounded-circle p-3">
+                      <i class="bi bi-person-fill text-danger fs-5"></i>
+                    </div>
+
+                    <div class="flex-grow-1">
+                      <h5 class="fw-semibold text-light mb-1">
+                        Robert Williams
+                      </h5>
+
+                      <small class="text-success">
+                        <i class="bi bi-check-circle-fill me-1"></i>
+                        Generated
+                      </small>
+                    </div>
+
+                    <i class="bi bi-file-earmark-check text-success fs-4"></i>
+
+                  </div>
+                </div>
+
+              </div>
+
+            }
+
+            <!-- CURSO ASP.NET: CERTIFICADOS EM PROCESSAMENTO -->
+            @else if (selectedCourse() === 'dotnet') {
+
+              <div class="mb-4">
+                <h4 class="h5 fw-bold text-light mb-2">
+                  ASP.NET Core Web API
+                </h4>
+
+                <span
+                  class="badge bg-warning bg-opacity-25 text-warning rounded-pill px-3 py-2"
+                >
+                  <i class="bi bi-hourglass-split me-1"></i>
+                  Processing Certificates
+                </span>
+              </div>
+
+              <!-- TODO: Substituir por certificados retornados pela API -->
+              <div class="students-list">
+
+                <!-- ALUNO 1 -->
+                <div
+                  class="bg-lighterDark border border-primary border-opacity-25 rounded-3 p-3"
+                >
+                  <div class="d-flex align-items-center gap-3">
+
+                    <div class="bg-primary bg-opacity-25 rounded-circle p-3">
+                      <i class="bi bi-person-fill text-danger fs-5"></i>
+                    </div>
+
+                    <div class="flex-grow-1">
+                      <h5 class="fw-semibold text-light mb-1">
+                        John Smith
+                      </h5>
+
+                      <small class="text-success">
+                        <i class="bi bi-check-circle-fill me-1"></i>
+                        Generated
+                      </small>
+                    </div>
+
+                    <i class="bi bi-file-earmark-check text-success fs-4"></i>
+
+                  </div>
+                </div>
+
+                <!-- ALUNO 2 -->
+                <div
+                  class="bg-lighterDark border border-primary border-opacity-25 rounded-3 p-3"
+                >
+                  <div class="d-flex align-items-center gap-3">
+
+                    <div class="bg-primary bg-opacity-25 rounded-circle p-3">
+                      <i class="bi bi-person-fill text-danger fs-5"></i>
+                    </div>
+
+                    <div class="flex-grow-1">
+                      <h5 class="fw-semibold text-light mb-1">
+                        Sarah Miller
+                      </h5>
+
+                      <small class="text-warning">
+                        <i class="bi bi-hourglass-split me-1"></i>
+                        Generating Certificate
+                      </small>
+                    </div>
+
+                    <i class="bi bi-clock-history text-warning fs-4"></i>
+
+                  </div>
+                </div>
+
+              </div>
+
+            }
+
+            <!-- CURSO SEM CERTIFICADOS -->
+            @else if (selectedCourse() === 'database') {
+
+              <div class="mb-4">
+                <h4 class="h5 fw-bold text-light mb-2">
+                  Database Essentials
+                </h4>
+              </div>
+
+              <!-- Estado vazio -->
+              <div class="text-center py-5">
+
+                <div class="mb-4">
+                  <i class="bi bi-file-earmark-x display-1 text-secondary opacity-50"></i>
+                </div>
+
+                <h4 class="text-light fw-semibold mb-3">
+                  No Certificates Found
+                </h4>
+
+                <p class="text-secondary mb-0">
+                  There are no certificates associated with
+                  this course yet. Enroll students and generate
+                  their certificates to get started.
+                </p>
+
+              </div>
+
+            }
+
+          </div>
+
+          <!-- RODAPÉ: DOWNLOAD DOS CERTIFICADOS -->
+          <div class="mt-4 pt-3 border-top border-primary border-opacity-25">
+
+            <div class="d-flex align-items-center gap-2 mb-3">
+              <i class="bi bi-info-circle text-danger"></i>
+
+              <small class="text-secondary">
+                Certificates will be downloaded as a ZIP file.
+              </small>
+            </div>
+
+            <!-- TODO: Integrar endpoint de download do ZIP -->
+            <button
+              type="button"
+              class="btn btn-danger btn-lg w-100 rounded-3 py-3 fw-bold text-white shadow d-flex align-items-center justify-content-center gap-2"
+              [disabled]="selectedCourse() !== 'angular'"
+              (click)="downloadCertificates()"
+            >
+              <i class="bi bi-cloud-arrow-down fs-5"></i>
+              Download Certificates
+              <i class="bi bi-download ms-2"></i>
+            </button>
+
+            @if (selectedCourse() !== 'angular') {
+              <p class="text-secondary text-center small mt-3 mb-0">
+                <i class="bi bi-lock me-1"></i>
+                Select a course with certificates ready for download.
+              </p>
+            }
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
