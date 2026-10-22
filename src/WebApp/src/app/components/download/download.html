@@ -120,7 +120,7 @@
             }
 
             <!-- CURSO ANGULAR: CERTIFICADOS GERADOS -->
-            @else if (selectedCourse() === 'angular') {
+            @else if (selectedCourse() !== null) {
               <!-- Informações do curso selecionado -->
               <div class="mb-4">
                 <h4 class="h5 fw-bold text-light mb-2">Angular Fundamentals</h4>
@@ -133,67 +133,29 @@
 
               <!-- Lista estática de certificados -->
               <!-- TODO: Carregar alunos e status pela API -->
-              <div class="students-list">
-                <!-- ALUNO 1 -->
-                <div class="bg-lighterDark border border-primary border-opacity-25 rounded-3 p-3">
-                  <div class="d-flex align-items-center gap-3">
-                    <div class="bg-primary bg-opacity-25 rounded-circle p-3">
-                      <i class="bi bi-person-fill text-danger fs-5"></i>
+              @for (item of certificades(); track $index) {
+                <div class="students-list">
+                  <!-- ALUNO 1 -->
+                  <div class="bg-lighterDark border border-primary border-opacity-25 rounded-3 p-3">
+                    <div class="d-flex align-items-center gap-3">
+                      <div class="bg-primary bg-opacity-25 rounded-circle p-3">
+                        <i class="bi bi-person-fill text-danger fs-5"></i>
+                      </div>
+
+                      <div class="flex-grow-1">
+                        <h5 class="fw-semibold text-light mb-1">{{ item.nomeAluno }}</h5>
+
+                        <small class="text-success">
+                          <i class="bi bi-check-circle-fill me-1"></i>
+                          {{ item.status }}
+                        </small>
+                      </div>
+
+                      <i class="bi bi-file-earmark-check text-success fs-4"></i>
                     </div>
-
-                    <div class="flex-grow-1">
-                      <h5 class="fw-semibold text-light mb-1">James Anderson</h5>
-
-                      <small class="text-success">
-                        <i class="bi bi-check-circle-fill me-1"></i>
-                        Generated
-                      </small>
-                    </div>
-
-                    <i class="bi bi-file-earmark-check text-success fs-4"></i>
                   </div>
                 </div>
-
-                <!-- ALUNO 2 -->
-                <div class="bg-lighterDark border border-primary border-opacity-25 rounded-3 p-3">
-                  <div class="d-flex align-items-center gap-3">
-                    <div class="bg-primary bg-opacity-25 rounded-circle p-3">
-                      <i class="bi bi-person-fill text-danger fs-5"></i>
-                    </div>
-
-                    <div class="flex-grow-1">
-                      <h5 class="fw-semibold text-light mb-1">Mary Johnson</h5>
-
-                      <small class="text-success">
-                        <i class="bi bi-check-circle-fill me-1"></i>
-                        Generated
-                      </small>
-                    </div>
-
-                    <i class="bi bi-file-earmark-check text-success fs-4"></i>
-                  </div>
-                </div>
-
-                <!-- ALUNO 3 -->
-                <div class="bg-lighterDark border border-primary border-opacity-25 rounded-3 p-3">
-                  <div class="d-flex align-items-center gap-3">
-                    <div class="bg-primary bg-opacity-25 rounded-circle p-3">
-                      <i class="bi bi-person-fill text-danger fs-5"></i>
-                    </div>
-
-                    <div class="flex-grow-1">
-                      <h5 class="fw-semibold text-light mb-1">Robert Williams</h5>
-
-                      <small class="text-success">
-                        <i class="bi bi-check-circle-fill me-1"></i>
-                        Generated
-                      </small>
-                    </div>
-
-                    <i class="bi bi-file-earmark-check text-success fs-4"></i>
-                  </div>
-                </div>
-              </div>
+              }
             }
 
             <!-- CURSO ASP.NET: CERTIFICADOS EM PROCESSAMENTO -->

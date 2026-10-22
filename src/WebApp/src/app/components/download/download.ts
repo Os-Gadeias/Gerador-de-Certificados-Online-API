@@ -3,12 +3,26 @@ import { ServiceListCourses } from '../../services/course/listCourses/serviceLis
 import { ListCourseResponse } from '../../services/course/models/Course';
 import { map } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { ServiceListCertificades } from '../../services/certificade/serviceListCertificades';
+import { ListCertificadesResponse } from '../../services/certificade/models';
 
 interface ListCourseViewModel {
   id: string;
   nome: string;
   descricao: string | null;
   studentsCertificades: number | null;
+}
+
+interface CertificadeViewModel {
+  nomeAluno: string;
+  status: string;
+}
+
+function toCertificadeViewModel(response: ListCertificadesResponse): CertificadeViewModel[] {
+  return response.certificados.map((c) => ({
+    nomeAluno: c.nomeAluno,
+    status: c.status,
+  }));
 }
 
 function toCourseViewModel(respose: ListCourseResponse[]): ListCourseViewModel[] {
@@ -27,6 +41,7 @@ function toCourseViewModel(respose: ListCourseResponse[]): ListCourseViewModel[]
 })
 export class Download {
   protected listCourses = inject(ServiceListCourses);
+  protected listCertificades = inject(ServiceListCertificades);
 
   constructor() {}
 
@@ -35,6 +50,8 @@ export class Download {
   protected readonly selectedCourse = signal<string | null>(null);
 
   protected readonly countCourses = computed(() => this.courses().length);
+
+  protected certificades = signal<CertificadeViewModel[] | null>(null);
 
   //listagem de cursos
   protected courses = toSignal(
@@ -45,9 +62,9 @@ export class Download {
   // Atualiza o curso selecionado na interface
   protected selectCourse(courseId: string): void {
     this.selectedCourse.set(courseId);
-  }
 
-  // TODO: Integrar com a API de download de certificados
+    this.loadCertificades(courseId);
+  }
   protected downloadCertificates(): void {
     const courseId = this.selectedCourse();
 
@@ -60,4 +77,14 @@ export class Download {
     // TODO: Criar um Blob e iniciar o download no navegador.
     console.log('Download requested for course:', courseId);
   }
+
+  private loadCertificades(courseId: string) {
+    this.listCertificades.enviarMensagem(courseId).subscribe({
+      next: (response) => {
+        this.certificades.set(toCertificadeViewModel(response));
+      },
+    });
+  }
 }
+
+// TODO: Integrar com a API de download de certificados
