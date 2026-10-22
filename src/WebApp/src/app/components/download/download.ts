@@ -1,6 +1,24 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
+import { ServiceListCourses } from '../../services/course/listCourses/serviceListCourses';
+import { ListCourseResponse } from '../../services/course/models/Course';
+import { map } from 'rxjs';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 type CourseId = 'angular' | 'dotnet' | 'database';
+
+interface ListCourseViewModel {
+  id: string;
+  nome: string;
+  descricao: string | null;
+}
+
+function toCourseViewModel(respose: ListCourseResponse[]): ListCourseViewModel[] {
+  return respose.map((r) => ({
+    id: r.id,
+    nome: r.nome,
+    descricao: r.descricao,
+  }));
+}
 
 @Component({
   imports: [],
@@ -8,8 +26,17 @@ type CourseId = 'angular' | 'dotnet' | 'database';
   templateUrl: './download.html',
 })
 export class Download {
+  protected listCourses = inject(ServiceListCourses);
+
+  constructor() {}
+
   // Armazena o curso selecionado
   protected readonly selectedCourse = signal<CourseId | null>(null);
+
+  //listagem de cursos
+  protected courses = toSignal(
+    this.listCourses.enviarMensagem().pipe(map((c) => toCourseViewModel(c))),
+  );
 
   // Atualiza o curso selecionado na interface
   protected selectCourse(courseId: CourseId): void {
