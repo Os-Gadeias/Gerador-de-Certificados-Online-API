@@ -2,7 +2,12 @@ import { Component, signal } from '@angular/core';
 
 type CourseId = 'angular' | 'dotnet' | 'database';
 
-export class DownloadCertificates {
+@Component({
+  imports: [],
+  selector: 'app-download',
+  templateUrl: './download.html',
+})
+export class Download {
   // Armazena o curso selecionado
   protected readonly selectedCourse = signal<CourseId | null>(null);
 
