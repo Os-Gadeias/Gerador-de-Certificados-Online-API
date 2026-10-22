@@ -5,6 +5,8 @@ import { map } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ServiceListCertificades } from '../../services/certificade/serviceListCertificades';
 import { ListCertificadesResponse } from '../../services/certificade/models';
+import { ServiceDownloadCertificades } from '../../services/certificade/serviceDownloadCertificades';
+import { HttpErrorResponse } from '@angular/common/http';
 
 interface ListCourseViewModel {
   id: string;
@@ -42,7 +44,7 @@ function toCourseViewModel(respose: ListCourseResponse[]): ListCourseViewModel[]
 export class Download {
   protected listCourses = inject(ServiceListCourses);
   protected listCertificades = inject(ServiceListCertificades);
-
+  protected downloadCertificades = inject(ServiceDownloadCertificades);
   constructor() {}
 
   // signal para o ID do curso
@@ -67,17 +69,26 @@ export class Download {
 
     this.loadCertificades(courseId);
   }
-  protected downloadCertificates(): void {
-    const courseId = this.selectedCourse();
+  protected downloadCertificates(courseId: string) {
+    this.downloadCertificades.enviarMensagem(courseId).subscribe({
+      next: (blob: Blob) => {
+        const url = URL.createObjectURL(blob);
 
-    if (courseId !== 'angular') {
-      return;
-    }
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `certificates-${courseId}.zip`;
 
-    // TODO: Substituir pelo ID real do curso.
-    // TODO: Chamar o service de download do ZIP.
-    // TODO: Criar um Blob e iniciar o download no navegador.
-    console.log('Download requested for course:', courseId);
+        document.body.appendChild(link);
+        link.click();
+
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      },
+
+      error: (err: HttpErrorResponse) => {
+        console.error('Error downloading certificates:', err);
+      },
+    });
   }
 
   private loadCertificades(courseId: string) {

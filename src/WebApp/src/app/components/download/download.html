@@ -249,20 +249,18 @@
             <button
               type="button"
               class="btn btn-danger btn-lg w-100 rounded-3 py-3 fw-bold text-white shadow d-flex align-items-center justify-content-center gap-2"
-              [disabled]="selectedCourse() !== 'angular'"
-              (click)="downloadCertificates()"
+              [disabled]="countCertificades() === 0"
+              (click)="downloadCertificates(selectedCourse()!)"
             >
               <i class="bi bi-cloud-arrow-down fs-5"></i>
               Download Certificates
               <i class="bi bi-download ms-2"></i>
             </button>
 
-            @if (selectedCourse() !== 'angular') {
-              <p class="text-secondary text-center small mt-3 mb-0">
-                <i class="bi bi-lock me-1"></i>
-                Select a course with certificates ready for download.
-              </p>
-            }
+            <p class="text-secondary text-center small mt-3 mb-0">
+              <i class="bi bi-lock me-1"></i>
+              Select a course with certificates ready for download.
+            </p>
           </div>
         </div>
       </div>
