@@ -27,7 +27,8 @@ public class SelecionarCursoPorIdQueryHandler(IRepositorioCurso repositorio) : I
             curso.Nome,
             curso.Descricao,
             curso.CargaHoraria,
-            curso.DataConclusao
+            curso.DataConclusao,
+            curso.Certificados?.Count
         ));
     }
 }

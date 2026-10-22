@@ -23,7 +23,8 @@ public sealed class SelecionarTodosCursosQueryHandler(
                 curso.Nome,
                 curso.Descricao,
                 curso.CargaHoraria,
-                curso.DataConclusao))
+                curso.DataConclusao,
+                curso.Certificados?.Count))
             .ToList();
 
         return Result.Ok(cursosDto);
