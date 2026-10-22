@@ -13,4 +13,5 @@ export interface ListCourseResponse {
   descricao: string | null;
   cargaHoraria: number;
   dataConclusao: string;
+  qntdCertificados: number | null;
 }

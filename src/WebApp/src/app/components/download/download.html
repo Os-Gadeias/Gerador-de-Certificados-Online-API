@@ -51,7 +51,7 @@
             <!-- LISTAGEM DE CURSOS NA DIREITA -->
             <button
               type="button"
-              class="btn bg-lighterDark border rounded-3 p-3 w-100 text-start"
+              class="btn bg-lighterDark border rounded-3 p-3 w-100 text-start mb-3"
               [class.border-primary]="selectedCourse() !== 'angular'"
               (click)="selectCourse('angular')"
             >
@@ -68,6 +68,7 @@
                   }
                   <p class="text-secondary">
                     <i class="bi bi-people me-1"></i>
+                    {{ item.studentsCertificades }} Certificades
                   </p>
                 </div>
 

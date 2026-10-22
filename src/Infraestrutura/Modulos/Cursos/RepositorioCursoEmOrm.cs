@@ -15,5 +15,8 @@ public class RepositorioCursoEmOrm(GeradorCertificadosDbContext dbContext, IProv
               .Include(c => c.Certificados)
               .FirstOrDefaultAsync(c => c.Id == idSelecionado, cancellationToken);
      }
-
+    public override async Task<List<Curso>> SelecionarTodosAsync(CancellationToken cancellationToken = default)
+    {
+        return await registros.Include(c => c.Certificados).ToListAsync();
+    }
 }

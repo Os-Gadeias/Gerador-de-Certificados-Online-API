@@ -10,6 +10,7 @@ interface ListCourseViewModel {
   id: string;
   nome: string;
   descricao: string | null;
+  studentsCertificades: number | null;
 }
 
 function toCourseViewModel(respose: ListCourseResponse[]): ListCourseViewModel[] {
@@ -17,6 +18,7 @@ function toCourseViewModel(respose: ListCourseResponse[]): ListCourseViewModel[]
     id: r.id,
     nome: r.nome,
     descricao: r.descricao,
+    studentsCertificades: r.qntdCertificados,
   }));
 }
 
