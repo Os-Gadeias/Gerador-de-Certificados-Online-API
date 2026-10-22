@@ -34,7 +34,7 @@
           class="p-4 p-md-5 bg-dark rounded-4 shadow-lg border border-secondary border-opacity-10 min-vh-50 d-flex flex-column justify-content-center"
         >
           <!-- Lista / Contêiner de Cursos -->
-          <div id="courseListContainer" class="d-flex flex-column gap-3">
+          <div id=" courseListContainer" class="course-list d-flex flex-column gap-3">
             <!-- Estado Vazio (Mensagem Padrão) -->
             <div class="courses-list">
               @if (!provideUser.isLoggedIn()) {
@@ -65,16 +65,12 @@
                 </div>
               } @else {
                 @for (item of courses(); track item.id) {
-                  <div class="card certificado bg-lighterDark border-0 rounded-3 p-3 text-light">
+                  <div class="card bg-lighterDark border-0 rounded-3 p-3 text-light">
                     <div class="d-flex justify-content-between align-items-center">
                       <div>
-                        <h5 class="fw-bold text-light mb-1">
-                          {{ item.nome }}
-                        </h5>
+                        <h5 class="fw-bold text-light mb-1">Course: {{ item.nome }}</h5>
 
-                        <p class="text-secondary small mb-2">
-                          {{ item.descricao }}
-                        </p>
+                        <p class="text-secondary small mb-2">Description: {{ item.descricao }}</p>
 
                         <div class="d-flex gap-3 text-secondary small">
                           <span>
