@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
 
 interface Icons {
   titulo: string;
@@ -7,7 +6,7 @@ interface Icons {
 }
 
 @Component({
-  imports: [RouterLink],
+  imports: [],
   selector: 'app-home',
   templateUrl: './home.html',
 })
