@@ -53,6 +53,8 @@ export class Download {
 
   protected certificades = signal<CertificadeViewModel[] | null>(null);
 
+  protected readonly countCertificades = computed(() => this.certificades()!.length);
+
   //listagem de cursos
   protected courses = toSignal(
     this.listCourses.enviarMensagem().pipe(map((c) => toCourseViewModel(c))),

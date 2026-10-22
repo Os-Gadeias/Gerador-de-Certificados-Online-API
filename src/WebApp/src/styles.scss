@@ -124,6 +124,41 @@ html {
   }
 }
 
+.certificades-list {
+  min-height: 350px;
+  max-height: 350px;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  padding-right: 8px;
+
+  // Scrollbar personalizada
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #2a1941;
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #6b2cbb;
+    border-radius: 10px;
+
+    &:hover {
+      background: #6a52cf;
+    }
+  }
+
+  scrollbar-width: thin;
+  scrollbar-color: #6b2cbb #2a1941;
+}
 .select {
   background-color: $roxo-escuro;
   color: $secundaria;
