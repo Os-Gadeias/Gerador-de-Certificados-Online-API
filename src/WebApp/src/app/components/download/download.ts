@@ -1,10 +1,8 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { ServiceListCourses } from '../../services/course/listCourses/serviceListCourses';
 import { ListCourseResponse } from '../../services/course/models/Course';
 import { map } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
-
-type CourseId = 'angular' | 'dotnet' | 'database';
 
 interface ListCourseViewModel {
   id: string;
@@ -32,16 +30,20 @@ export class Download {
 
   constructor() {}
 
-  // Armazena o curso selecionado
-  protected readonly selectedCourse = signal<CourseId | null>(null);
+  // signal para o ID do curso
+
+  protected readonly selectedCourse = signal<string | null>(null);
+
+  protected readonly countCourses = computed(() => this.courses().length);
 
   //listagem de cursos
   protected courses = toSignal(
     this.listCourses.enviarMensagem().pipe(map((c) => toCourseViewModel(c))),
+    { initialValue: [] as ListCourseViewModel[] },
   );
 
   // Atualiza o curso selecionado na interface
-  protected selectCourse(courseId: CourseId): void {
+  protected selectCourse(courseId: string): void {
     this.selectedCourse.set(courseId);
   }
 
