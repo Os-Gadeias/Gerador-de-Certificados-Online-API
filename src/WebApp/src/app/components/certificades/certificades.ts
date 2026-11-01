@@ -8,6 +8,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ListCertificadesResponse } from '../../services/certificade/models';
 import { form, FormField, required } from '@angular/forms/signals';
 import { ServiceEnrollStudents } from '../../services/certificade/serviceEnrollStudent';
+import { ProvideUser } from '../../auth/provideUser';
+import { RouterLink } from '@angular/router';
 
 interface EnrollStudentViewModel {
   cursoId: string;
@@ -37,7 +39,7 @@ function ToViewModel(course: ListCourseResponse): CoursesViewModel {
 }
 
 @Component({
-  imports: [FormField],
+  imports: [FormField, RouterLink],
   selector: 'app-certificades',
   templateUrl: './certificades.html',
 })
@@ -45,6 +47,7 @@ export class Certificades {
   protected listCourse = inject(ServiceListCourses);
   protected listStudents = inject(ServiceListStudents);
   protected enrollStudent = inject(ServiceEnrollStudents);
+  protected provideUser = inject(ProvideUser);
 
   protected students = signal<StudentViewModel[]>([]);
   protected selectedCourseId = signal<string | null>(null);
