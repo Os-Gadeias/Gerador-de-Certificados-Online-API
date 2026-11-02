@@ -7,6 +7,8 @@ import { ServiceListCertificades } from '../../services/certificade/serviceListC
 import { ListCertificadesResponse } from '../../services/certificade/models';
 import { ServiceDownloadCertificades } from '../../services/certificade/serviceDownloadCertificades';
 import { HttpErrorResponse } from '@angular/common/http';
+import { ProvideUser } from '../../auth/provideUser';
+import { RouterLink } from '@angular/router';
 
 interface ListCourseViewModel {
   id: string;
@@ -37,11 +39,12 @@ function toCourseViewModel(respose: ListCourseResponse[]): ListCourseViewModel[]
 }
 
 @Component({
-  imports: [],
+  imports: [RouterLink],
   selector: 'app-download',
   templateUrl: './download.html',
 })
 export class Download {
+  protected provideUser = inject(ProvideUser);
   protected listCourses = inject(ServiceListCourses);
   protected listCertificades = inject(ServiceListCertificades);
   protected downloadCertificades = inject(ServiceDownloadCertificades);
