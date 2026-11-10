@@ -1,5 +1,6 @@
 using GeradorCertificados.Aplicacao.Modulos.Cursos;
 using GeradorCertificados.Dominio.Compartilhado.Auth;
+using GeradorCertificados.Dominio.Modulos.ModuloCertificado;
 using GeradorCertificados.Dominio.Modulos.ModuloCurso;
 using GeradorCertificados.Infraestrutura.Compartilhado.Orm;
 using GeradorCertificados.Infraestrutura.Modulos.Cursos;
@@ -32,6 +33,11 @@ public sealed class ExcluirCursoTests
             null,
             30,
             DateTime.Today.AddDays(20));
+
+        var certificadoDoUsuario = new Certificado("Aluno do usuário", cursoDoUsuario);
+        var certificadoDeOutroUsuario = new Certificado("Aluno de outro usuário", cursoDeOutroUsuario);
+        cursoDoUsuario.AddCertificados([certificadoDoUsuario]);
+        cursoDeOutroUsuario.AddCertificados([certificadoDeOutroUsuario]);
 
         await using GeradorCertificadosDbContext contextoUsuario = new(
             options,
@@ -72,6 +78,42 @@ public sealed class ExcluirCursoTests
         Assert.IsTrue(await contextoVerificacao.Cursos
             .IgnoreQueryFilters()
             .AnyAsync(curso => curso.Id == cursoDeOutroUsuario.Id));
+        Assert.IsFalse(await contextoVerificacao.Set<Certificado>()
+            .AnyAsync(c => c.Id == certificadoDoUsuario.Id));
+        Assert.IsTrue(await contextoVerificacao.Set<Certificado>()
+            .AnyAsync(c => c.Id == certificadoDeOutroUsuario.Id));
+    }
+
+    [TestMethod]
+    [DataRow(false)]
+    [DataRow(true)]
+    public async Task Deve_ExcluirCursoComCertificados_SemExcluirOutrosCursos(bool limparRastreamento)
+    {
+        var usuario = new ProvedorDeUsuarioFake(Guid.NewGuid());
+        var options = new DbContextOptionsBuilder<GeradorCertificadosDbContext>()
+            .UseInMemoryDatabase(Guid.NewGuid().ToString()).Options;
+        await using var contexto = new GeradorCertificadosDbContext(options, usuario);
+        IRepositorioCurso repositorio = new RepositorioCursoEmOrm(contexto, usuario);
+        var curso = new Curso("Curso a excluir", null, 20, DateTime.Today);
+        var outroCurso = new Curso("Curso preservado", null, 20, DateTime.Today);
+        var certificadoUm = new Certificado("Aluno um", curso);
+        var certificadoDois = new Certificado("Aluno dois", curso);
+        var certificadoPreservado = new Certificado("Aluno preservado", outroCurso);
+        curso.AddCertificados([certificadoUm, certificadoDois]);
+        outroCurso.AddCertificados([certificadoPreservado]);
+        await repositorio.CadastrarAsync(curso);
+        await repositorio.CadastrarAsync(outroCurso);
+        if (limparRastreamento)
+            contexto.ChangeTracker.Clear();
+
+        Assert.IsTrue(await repositorio.ExcluirAsync(curso.Id));
+
+        await using var verificacao = new GeradorCertificadosDbContext(options, usuario);
+        Assert.IsFalse(await verificacao.Cursos.AnyAsync(c => c.Id == curso.Id));
+        Assert.IsTrue(await verificacao.Cursos.AnyAsync(c => c.Id == outroCurso.Id));
+        var certificadosRestantes = await verificacao.Set<Certificado>().ToListAsync();
+        Assert.HasCount(1, certificadosRestantes);
+        Assert.AreEqual(certificadoPreservado.Id, certificadosRestantes[0].Id);
     }
 
     private sealed class ProvedorDeUsuarioFake(Guid usuarioId) : IProvedorDeUsuario
