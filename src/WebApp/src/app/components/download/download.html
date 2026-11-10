@@ -48,7 +48,13 @@
 
             <hr class="border-primary opacity-25 mb-4" />
 
-            @for (item of courses(); track $index) {
+            @if (coursesError()) {
+              <p class="text-warning small" role="alert">
+                Unable to update courses. Retrying automatically...
+              </p>
+            }
+
+            @for (item of courses(); track item.id) {
               <!-- LISTAGEM DE CURSOS NA ESQUERDA -->
               <button
                 type="button"
@@ -122,7 +128,6 @@
                     Choose a course from the list to view its students and available certificates.
                   </p>
                 </div>
-
               } @else if (selectedCourse() !== null) {
                 @if (statusError()) {
                   <p class="text-danger" role="alert">
