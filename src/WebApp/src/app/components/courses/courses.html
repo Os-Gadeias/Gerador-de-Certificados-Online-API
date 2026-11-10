@@ -37,6 +37,9 @@
           <div id=" courseListContainer" class="course-list d-flex flex-column gap-3">
             <!-- Estado Vazio (Mensagem Padrão) -->
             <div class="courses-list">
+              @if (errorMessage()) {
+                <p class="text-danger" role="alert">{{ errorMessage() }}</p>
+              }
               @if (!provideUser.isLoggedIn()) {
                 <div class="text-center py-5">
                   <div class="mb-3">
@@ -87,10 +90,21 @@
 
                       <div class="d-flex gap-2">
                         <button
+                          type="button"
                           class="btn btn-sm btn-outline-danger"
+                          [disabled]="deletingCourses().has(item.id)"
+                          [attr.aria-busy]="deletingCourses().has(item.id)"
+                          [attr.aria-label]="'Delete course ' + item.nome"
                           (click)="deleteCourse(item.id)"
                         >
-                          <i class="bi bi-trash"></i>
+                          @if (deletingCourses().has(item.id)) {
+                            <span
+                              class="spinner-border spinner-border-sm"
+                              aria-hidden="true"
+                            ></span>
+                          } @else {
+                            <i class="bi bi-trash" aria-hidden="true"></i>
+                          }
                         </button>
                       </div>
                     </div>

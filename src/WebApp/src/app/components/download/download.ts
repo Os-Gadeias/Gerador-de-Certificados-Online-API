@@ -1,14 +1,15 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { ServiceListCourses } from '../../services/course/listCourses/serviceListCourses';
 import { ListCourseResponse } from '../../services/course/models/Course';
-import { EMPTY, catchError, exhaustMap, map, of, switchMap, tap, timer } from 'rxjs';
-import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { EMPTY, catchError, exhaustMap, map, of, startWith, switchMap, timer } from 'rxjs';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { ServiceListCertificades } from '../../services/certificade/serviceListCertificades';
 import { ListCertificadesResponse } from '../../services/certificade/models';
 import { ServiceDownloadCertificades } from '../../services/certificade/serviceDownloadCertificades';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ProvideUser } from '../../auth/provideUser';
 import { RouterLink } from '@angular/router';
+import { ServiceDeleteCourse } from '../../services/course/deleteCourse/serviceDeleteCourse';
 
 interface ListCourseViewModel {
   id: string;
@@ -45,6 +46,7 @@ function toCourseViewModel(respose: ListCourseResponse[]): ListCourseViewModel[]
 })
 export class Download {
   private readonly refreshIntervalMs = 3000;
+  private readonly deleteCourseService = inject(ServiceDeleteCourse);
   protected provideUser = inject(ProvideUser);
   protected listCourses = inject(ServiceListCourses);
   protected listCertificades = inject(ServiceListCertificades);
@@ -70,31 +72,51 @@ export class Download {
     () => this.certificades()?.some((c) => c.status === 'Falha') ?? false,
   );
 
-  // Atualiza os cursos e suas quantidades enquanto o usuário estiver autenticado.
-  protected courses = toSignal(
-    toObservable(this.provideUser.isLoggedIn).pipe(
-      switchMap((isLoggedIn) =>
-        isLoggedIn
-          ? timer(0, this.refreshIntervalMs).pipe(
-              exhaustMap(() =>
-                this.listCourses.enviarMensagem().pipe(
-                  map((courses) => toCourseViewModel(courses)),
-                  tap(() => this.coursesError.set(false)),
-                  catchError(() => {
-                    this.coursesError.set(true);
-                    // Preserva a lista atual e tenta novamente na próxima consulta.
-                    return EMPTY;
-                  }),
-                ),
-              ),
-            )
-          : of([] as ListCourseViewModel[]),
-      ),
-    ),
-    { initialValue: [] as ListCourseViewModel[] },
-  );
+  protected readonly courses = signal<ListCourseViewModel[]>([]);
 
   constructor() {
+    this.deleteCourseService.courseDeleted$.pipe(takeUntilDestroyed()).subscribe((courseId) => {
+      this.courses.update((courses) => courses.filter((course) => course.id !== courseId));
+      if (this.selectedCourse() === courseId) this.clearSelectedCourse();
+    });
+
+    toObservable(this.provideUser.isLoggedIn)
+      .pipe(
+        switchMap((isLoggedIn) =>
+          isLoggedIn
+            ? this.deleteCourseService.courseDeleted$.pipe(
+                startWith(null),
+                // A exclusão cancela consultas antigas e reinicia a atualização da lista.
+                switchMap(() =>
+                  timer(0, this.refreshIntervalMs).pipe(
+                    exhaustMap(() =>
+                      this.listCourses.enviarMensagem().pipe(
+                        catchError(() => {
+                          this.coursesError.set(true);
+                          return EMPTY;
+                        }),
+                      ),
+                    ),
+                  ),
+                ),
+              )
+            : of([] as ListCourseResponse[]),
+        ),
+        takeUntilDestroyed(),
+      )
+      .subscribe((response) => {
+        const courses = toCourseViewModel(response);
+        this.courses.set(courses);
+        this.coursesError.set(false);
+        const selectedCourseId = this.selectedCourse();
+        if (
+          selectedCourseId !== null &&
+          !courses.some((course) => course.id === selectedCourseId)
+        ) {
+          this.clearSelectedCourse();
+        }
+      });
+
     toObservable(this.selectedCourse)
       .pipe(
         switchMap((courseId) =>
@@ -102,15 +124,24 @@ export class Download {
             ? EMPTY
             : timer(0, this.refreshIntervalMs).pipe(
                 exhaustMap(() => this.loadCertificades(courseId)),
+                map((response) => ({ courseId, response })),
               ),
         ),
         takeUntilDestroyed(),
       )
-      .subscribe((response) => {
+      .subscribe(({ courseId, response }) => {
+        if (this.selectedCourse() !== courseId) return;
         this.certificades.set(toCertificadeViewModel(response));
         this.statusError.set(false);
         this.loadingCertificades.set(false);
       });
+  }
+
+  private clearSelectedCourse(): void {
+    this.selectedCourse.set(null);
+    this.certificades.set(null);
+    this.loadingCertificades.set(false);
+    this.statusError.set(false);
   }
 
   // Trocar o curso cancela a consulta anterior e reinicia o acompanhamento da fila.
@@ -147,8 +178,10 @@ export class Download {
   private loadCertificades(courseId: string) {
     return this.listCertificades.enviarMensagem(courseId).pipe(
       catchError(() => {
-        this.statusError.set(true);
-        this.loadingCertificades.set(false);
+        if (this.selectedCourse() === courseId) {
+          this.statusError.set(true);
+          this.loadingCertificades.set(false);
+        }
         // Mantém os últimos status e tenta novamente na próxima consulta.
         return EMPTY;
       }),

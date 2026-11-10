@@ -35,7 +35,7 @@ public abstract class RepositorioBaseEmOrm<T>(GeradorCertificadosDbContext dbCon
         return true;
     }
 
-    public async Task<bool> ExcluirAsync(Guid id, CancellationToken cancellationToken = default)
+    public virtual async Task<bool> ExcluirAsync(Guid id, CancellationToken cancellationToken = default)
     {
         T? registroSelecionado = await SelecionarPorIdAsync(id, cancellationToken);
 
