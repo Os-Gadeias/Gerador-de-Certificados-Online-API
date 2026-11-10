@@ -48,7 +48,17 @@
 
             <hr class="border-primary opacity-25 mb-4" />
 
-            @for (item of courses(); track $index) {
+            @if (coursesError()) {
+              <p class="text-warning small" role="alert">
+                Unable to update certificate counts. Retrying automatically...
+              </p>
+            } @else {
+              <p class="text-secondary small">
+                Certificate counts update automatically every 3 seconds.
+              </p>
+            }
+
+            @for (item of courses(); track item.id) {
               <!-- LISTAGEM DE CURSOS NA ESQUERDA -->
               <button
                 type="button"
@@ -68,7 +78,7 @@
                     }
                     <p class="text-secondary">
                       <i class="bi bi-people me-1"></i>
-                      {{ item.studentsCertificades }} Certificades
+                      {{ item.studentsCertificades ?? 0 }} Certificates
                     </p>
                   </div>
 
@@ -122,7 +132,6 @@
                     Choose a course from the list to view its students and available certificates.
                   </p>
                 </div>
-
               } @else if (selectedCourse() !== null) {
                 @if (statusError()) {
                   <p class="text-danger" role="alert">

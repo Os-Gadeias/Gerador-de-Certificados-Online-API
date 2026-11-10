@@ -1,7 +1,7 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { ServiceListCourses } from '../../services/course/listCourses/serviceListCourses';
 import { ListCourseResponse } from '../../services/course/models/Course';
-import { EMPTY, catchError, exhaustMap, map, switchMap, timer } from 'rxjs';
+import { EMPTY, catchError, exhaustMap, map, of, switchMap, tap, timer } from 'rxjs';
 import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { ServiceListCertificades } from '../../services/certificade/serviceListCertificades';
 import { ListCertificadesResponse } from '../../services/certificade/models';
@@ -44,6 +44,7 @@ function toCourseViewModel(respose: ListCourseResponse[]): ListCourseViewModel[]
   templateUrl: './download.html',
 })
 export class Download {
+  private readonly refreshIntervalMs = 3000;
   protected provideUser = inject(ProvideUser);
   protected listCourses = inject(ServiceListCourses);
   protected listCertificades = inject(ServiceListCertificades);
@@ -58,6 +59,7 @@ export class Download {
   protected certificades = signal<CertificadeViewModel[] | null>(null);
   protected readonly statusError = signal(false);
   protected readonly loadingCertificades = signal(false);
+  protected readonly coursesError = signal(false);
 
   protected readonly countCertificades = computed(() => this.certificades()?.length ?? 0);
   protected readonly certificatesReady = computed(
@@ -68,9 +70,27 @@ export class Download {
     () => this.certificades()?.some((c) => c.status === 'Falha') ?? false,
   );
 
-  //listagem de cursos
+  // Atualiza os cursos e suas quantidades enquanto o usuário estiver autenticado.
   protected courses = toSignal(
-    this.listCourses.enviarMensagem().pipe(map((c) => toCourseViewModel(c))),
+    toObservable(this.provideUser.isLoggedIn).pipe(
+      switchMap((isLoggedIn) =>
+        isLoggedIn
+          ? timer(0, this.refreshIntervalMs).pipe(
+              exhaustMap(() =>
+                this.listCourses.enviarMensagem().pipe(
+                  map((courses) => toCourseViewModel(courses)),
+                  tap(() => this.coursesError.set(false)),
+                  catchError(() => {
+                    this.coursesError.set(true);
+                    // Preserva a lista atual e tenta novamente na próxima consulta.
+                    return EMPTY;
+                  }),
+                ),
+              ),
+            )
+          : of([] as ListCourseViewModel[]),
+      ),
+    ),
     { initialValue: [] as ListCourseViewModel[] },
   );
 
@@ -80,7 +100,9 @@ export class Download {
         switchMap((courseId) =>
           courseId === null
             ? EMPTY
-            : timer(0, 3000).pipe(exhaustMap(() => this.loadCertificades(courseId))),
+            : timer(0, this.refreshIntervalMs).pipe(
+                exhaustMap(() => this.loadCertificades(courseId)),
+              ),
         ),
         takeUntilDestroyed(),
       )
