@@ -20,6 +20,18 @@ public class Certificado : EntidadeBase<Certificado>
     {
         Status = StatusGeracaoCertificado.GerandoCertificado;
     }
+    public void AlterarParaPendente()
+    {
+        Status = StatusGeracaoCertificado.Pendente;
+    }
+    public void AlterarParaGerandoZip()
+    {
+        Status = StatusGeracaoCertificado.GerandoZip;
+    }
+    public void AlterarParaConcluido()
+    {
+        Status = StatusGeracaoCertificado.Concluído;
+    }
     public void AlterarParaFalha()
     {
         Status = StatusGeracaoCertificado.Falha;

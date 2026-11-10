@@ -7,6 +7,26 @@ namespace GeradorDeCertificados.Tests.Unitario.Modulos.Pdf;
 public class GeradorDeZipTests
 {
     [TestMethod]
+    public void GerarZipComPdfInexistente_PreservaZipAnterior()
+    {
+        var cursoNome = Guid.NewGuid().ToString();
+        var caminhoPdf = GeradorDeZip.SalvarPdf([1, 2, 3], Guid.NewGuid());
+        var caminhoZip = GeradorDeZip.GerarZip([caminhoPdf], cursoNome);
+        var conteudoAnterior = File.ReadAllBytes(caminhoZip);
+        try
+        {
+            Assert.ThrowsExactly<FileNotFoundException>(() => GeradorDeZip.GerarZip(
+                [caminhoPdf, Path.Combine("storage", $"inexistente-{Guid.NewGuid()}.pdf")], cursoNome));
+            CollectionAssert.AreEqual(conteudoAnterior, File.ReadAllBytes(caminhoZip));
+        }
+        finally
+        {
+            File.Delete(caminhoPdf);
+            File.Delete(caminhoZip);
+        }
+    }
+
+    [TestMethod]
     public void SalvarPdfComDadosValidos_CriaArquivoPdfNoDiretorioCorreto()
     {
         Guid idCertificado = Guid.NewGuid();

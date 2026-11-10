@@ -51,16 +51,29 @@ public class SolicitaGeracaoCertificadoCommandHandler(
         foreach (string nome in command.NomesAlunos)
         {
             Certificado certificadoGerado = new(nome, cursoSelecionado);
+            certificadoGerado.AlterarParaPendente();
             certificados.Add(certificadoGerado);
             await repositorioCertificado.CadastrarAsync(certificadoGerado);
         }
 
         //manda os ids dos certificados e o id do curso
-        await bus.Publish(new SolicitarCertificadosMessages(
-            cursoSelecionado.Id,
-            certificados.Select(c => c.Id).ToList(),
-            cursoSelecionado.UsuarioId
-        ));
+        try
+        {
+            await bus.Publish(new SolicitarCertificadosMessages(
+                cursoSelecionado.Id,
+                certificados.Select(c => c.Id).ToList(),
+                cursoSelecionado.UsuarioId
+            ), cancellationToken);
+        }
+        catch
+        {
+            foreach (var certificado in certificados)
+            {
+                certificado.AlterarParaFalha();
+                await repositorioCertificado.EditarAsync(certificado.Id, certificado);
+            }
+            throw;
+        }
 
         //Retorna os Ids e nomes dos alunos
         return new SolicitarGeracaoResponse(

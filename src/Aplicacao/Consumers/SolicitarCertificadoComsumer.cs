@@ -35,23 +35,33 @@ public class SolicitarCertificadoComsumer
             curso.Id,
             curso);
 
+        List<Certificado> certificadosDoLote = [];
+        List<Exception> falhas = [];
+
         try
         {
             //Seleciona cada Certificado e começa a fazer as alteracoes e gerar o certificado
-            foreach (Guid idCertificado in mensagem.IdsCertificados)
+            foreach (Guid idCertificado in mensagem.IdsCertificados.Distinct())
             {
-                var certificadoSelecionado = await repositorioCertificado.SelecionarPorIdAsync(idCertificado)
-                ?? throw new NullReferenceException("Certificado não encontrado.");
-
-                //atualiza o status do certificado para GerandoCertificado
-                certificadoSelecionado.AlterarParaGerandoCertificado();
-
-                await repositorioCertificado.EditarAsync(
-                    certificadoSelecionado.Id,
-                    certificadoSelecionado
-                );
+                Certificado? certificadoSelecionado = null;
                 try
                 {
+                    certificadoSelecionado = await repositorioCertificado.SelecionarPorIdAsync(idCertificado)
+                        ?? throw new NullReferenceException("Certificado não encontrado.");
+
+                    if (certificadoSelecionado.Curso.Id != curso.Id)
+                        throw new InvalidOperationException("O certificado não pertence ao curso solicitado.");
+
+                    certificadosDoLote.Add(certificadoSelecionado);
+
+                    // Uma reentrega não deve refazer certificados já concluídos.
+                    if (certificadoSelecionado.Status == StatusGeracaoCertificado.Concluído
+                        && File.Exists(certificadoSelecionado.CaminhoPdf))
+                        continue;
+
+                    certificadoSelecionado.AlterarParaGerandoCertificado();
+                    await repositorioCertificado.EditarAsync(certificadoSelecionado.Id, certificadoSelecionado);
+
                     var pdfCertificado = gerarPdf.Gerar(certificadoSelecionado);
 
                     var caminhoPdf = GeradorDeZip.SalvarPdf(
@@ -60,20 +70,24 @@ public class SolicitarCertificadoComsumer
                 );
 
                     certificadoSelecionado.AddCaminhoDePdf(caminhoPdf);
+                    certificadoSelecionado.AlterarParaGerandoZip();
 
                     await repositorioCertificado.EditarAsync(
                         certificadoSelecionado.Id,
                         certificadoSelecionado
                     );
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    certificadoSelecionado.AlterarParaFalha();
-                    await repositorioCertificado.EditarAsync(
-                        certificadoSelecionado.Id,
-                        certificadoSelecionado
-                    );
-                    throw;
+                    if (certificadoSelecionado is not null && certificadosDoLote.Contains(certificadoSelecionado))
+                    {
+                        certificadoSelecionado.AlterarParaFalha();
+                        await repositorioCertificado.EditarAsync(
+                            certificadoSelecionado.Id,
+                            certificadoSelecionado
+                        );
+                    }
+                    falhas.Add(ex);
                 }
             }
 
@@ -85,31 +99,61 @@ public class SolicitarCertificadoComsumer
             curso.AddCertificados(certificados);
             await repositorioCurso.EditarAsync(curso.Id, curso);
 
-            var caminhosPdf = certificados
-                .Where(c => c.CaminhoPdf is not null)
-                .Select(c => c.CaminhoPdf)
+            var aguardandoZip = certificadosDoLote
+                .Where(c => c.Status == StatusGeracaoCertificado.GerandoZip)
                 .ToList();
 
-            if (caminhosPdf.Any(caminho => caminho is null))
-                throw new InvalidOperationException(
-                    "Não foi possível gerar o ZIP porque um certificado não possui PDF."
+            var precisaRestaurarZip = certificadosDoLote.Any(c => c.Status == StatusGeracaoCertificado.Concluído)
+                && !File.Exists(curso.CaminhoZip);
+
+            if (aguardandoZip.Count > 0 || precisaRestaurarZip)
+            {
+                // Inclui os certificados antigos concluídos, mas nunca PDFs de tentativas com falha.
+                var certificadosParaZip = certificados
+                    .Where(c => c.Status == StatusGeracaoCertificado.Concluído
+                        || aguardandoZip.Any(atual => atual.Id == c.Id))
+                    .ToList();
+
+                if (certificadosParaZip.Any(c => string.IsNullOrWhiteSpace(c.CaminhoPdf)))
+                    throw new InvalidOperationException(
+                        "Não foi possível gerar o ZIP porque um certificado não possui PDF."
+                    );
+
+                var caminhoZip = GeradorDeZip.GerarZip(
+                    certificadosParaZip.Select(c => c.CaminhoPdf!).ToList(),
+                    curso.Nome
                 );
 
-            var caminhoZip = GeradorDeZip.GerarZip(
-                caminhosPdf.Select(caminho => caminho!).ToList(),
-                curso.Nome
-            );
+                curso.AdicionarCaminhoDoZip(caminhoZip);
+                await repositorioCurso.EditarAsync(curso.Id, curso);
 
-            curso.AdicionarCaminhoDoZip(caminhoZip);
+                foreach (var certificado in aguardandoZip)
+                {
+                    certificado.AlterarParaConcluido();
+                    await repositorioCertificado.EditarAsync(certificado.Id, certificado);
+                }
+            }
+
+            if (falhas.Count == 1)
+                System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(falhas[0]).Throw();
+            if (falhas.Count > 1)
+                throw new AggregateException("Falha ao gerar certificados do lote.", falhas);
+
             curso.AlterarParaDisponivel();
-
             await repositorioCurso.EditarAsync(curso.Id, curso);
         }
-        finally
+        catch
         {
-            // deixa o status do curso para uma nova solicitação em sucesso ou erro.
-            curso.AlterarParaDisponivel();
+            // Se o ZIP falhar, apenas os certificados deste lote que aguardavam o ZIP falham.
+            foreach (var certificado in certificadosDoLote.Where(c =>
+                c.Status is StatusGeracaoCertificado.GerandoZip or StatusGeracaoCertificado.GerandoCertificado))
+            {
+                certificado.AlterarParaFalha();
+                await repositorioCertificado.EditarAsync(certificado.Id, certificado);
+            }
+            curso.AlterarParaFalha();
             await repositorioCurso.EditarAsync(curso.Id, curso);
+            throw;
         }
     }
 }

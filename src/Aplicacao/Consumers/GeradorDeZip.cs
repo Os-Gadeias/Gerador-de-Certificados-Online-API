@@ -35,22 +35,25 @@ public static class GeradorDeZip
             $"curso-{cursoNome}.zip"
         );
 
-        using var arquivoZip = new FileStream(
-            caminhoZip,
-            FileMode.Create
-        );
-
-        using var zip = new ZipArchive(
-            arquivoZip,
-            ZipArchiveMode.Create
-        );
-
-        foreach (var caminhoPdf in caminhosPdf)
+        var caminhoTemporario = Path.Combine(diretorio, $"{Guid.NewGuid()}.tmp");
+        try
         {
-            zip.CreateEntryFromFile(
-                caminhoPdf,
-                Path.GetFileName(caminhoPdf)
-            );
+            using (var arquivoZip = new FileStream(caminhoTemporario, FileMode.CreateNew))
+            using (var zip = new ZipArchive(arquivoZip, ZipArchiveMode.Create))
+            {
+                foreach (var caminhoPdf in caminhosPdf)
+                {
+                    zip.CreateEntryFromFile(caminhoPdf, Path.GetFileName(caminhoPdf));
+                }
+            }
+
+            // Só substitui o ZIP anterior depois de finalizar o novo arquivo com sucesso.
+            File.Move(caminhoTemporario, caminhoZip, overwrite: true);
+        }
+        finally
+        {
+            if (File.Exists(caminhoTemporario))
+                File.Delete(caminhoTemporario);
         }
 
         return caminhoZip;
